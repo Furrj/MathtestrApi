@@ -1,13 +1,16 @@
 FROM golang:1.21.0
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY . .
+ADD cmd ./cmd
+ADD build ./build
 
-CMD ["go", "run", "."]
+WORKDIR /app/cmd
 
 EXPOSE 5000
+
+CMD ["go", "run", "."]
