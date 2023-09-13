@@ -9,7 +9,7 @@ import (
 )
 
 func OpenDBConnection() *pgx.Conn {
-	connection_string := "postgres://postgres:password@host.docker.internal:5432/testdb"
+	connection_string := "postgres://postgres:password@localhost:5432/testdb"
 	db, err := pgx.Connect(context.Background(), connection_string)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
