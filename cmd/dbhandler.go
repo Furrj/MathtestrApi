@@ -18,14 +18,13 @@ func OpenDBConnection() *pgx.Conn {
 	return db
 }
 
-func FindByUsername(db *pgx.Conn, name string) error {
+func FindByUsername(db *pgx.Conn, userInfo User) (User, error) {
 	var user User
-	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", name).Scan(&user.ID, &user.Username, &user.Password)
+	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", userInfo.Username).Scan(&user.ID, &user.Username, &user.Password)
 	if err != nil {
-		return err
+		return user, err
 	}
-	fmt.Printf("%+v\n", user)
-	return nil
+	return user, nil
 }
 
 func DeleteByUsername(db *pgx.Conn, name string) error {
