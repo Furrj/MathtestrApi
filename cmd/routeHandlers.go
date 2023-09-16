@@ -26,7 +26,7 @@ func UserLogin(db *pgx.Conn) gin.HandlerFunc {
 		}
 
 		// Check database for user
-		validatedUserInfo, err := FindByUsername(db, submittedUserInfo)
+		validatedUserInfo, err := FindByUsername(db, submittedUserInfo.Username)
 		if err != nil {
 			log.Printf("Error searching database for user info:\n%+v\n", err)
 			ctx.JSON(http.StatusNotFound, invalidUser)
@@ -41,9 +41,31 @@ func UserLogin(db *pgx.Conn) gin.HandlerFunc {
 
 func UserRegister(db *pgx.Conn) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		bytes, _ := ctx.GetRawData()
-		data := string(bytes[:])
-		fmt.Printf("%+v\n", data)
+		var registerPayload RegisterPayload
+		var registerResponse RegisterResponse
+
+		if err := ctx.BindJSON(&registerPayload); err != nil {
+			log.Printf("Error binding register payload:\n%+v\n", err)
+			ctx.String(http.StatusNotFound, "Error")
+			return
+		}
+		fmt.Printf("%+v\n", registerPayload)
+
+		user, err := FindByUsername(db, registerPayload.Username)
+		if err != nil {
+			ctx.String(http.StatusBadRequest, "Error")
+			return
+		}
+		if user.Username == "" {
+			registerResponse.User.Username = registerPayload.Username
+			registerResponse.User.ID = 1
+			registerResponse.Valid = true
+			ctx.JSON(http.StatusOK, registerResponse)
+			return
+		}
+
+		registerResponse.Valid = false
+		ctx.JSON(http.StatusOK, registerResponse)
 	}
 
 }

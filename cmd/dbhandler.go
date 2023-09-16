@@ -18,10 +18,13 @@ func OpenDBConnection() *pgx.Conn {
 	return db
 }
 
-func FindByUsername(db *pgx.Conn, userInfo User) (User, error) {
+func FindByUsername(db *pgx.Conn, username string) (User, error) {
 	var user User
-	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", userInfo.Username).Scan(&user.ID, &user.Username, &user.Password)
+	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", username).Scan(&user.ID, &user.Username, &user.Password)
 	if err != nil {
+		if err == pgx.ErrNoRows {
+			return user, nil
+		}
 		return user, err
 	}
 	return user, nil
