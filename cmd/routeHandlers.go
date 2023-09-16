@@ -56,7 +56,7 @@ func UserRegister(db *pgx.Conn) gin.HandlerFunc {
 			ctx.String(http.StatusBadRequest, "Error")
 			return
 		}
-		if user.Username == "" {
+		if user.ID == -1 {
 			registerResponse.User.Username = registerPayload.Username
 			registerResponse.User.ID = 1
 			registerResponse.Valid = true

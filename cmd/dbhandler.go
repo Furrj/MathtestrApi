@@ -23,6 +23,7 @@ func FindByUsername(db *pgx.Conn, username string) (User, error) {
 	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", username).Scan(&user.ID, &user.Username, &user.Password)
 	if err != nil {
 		if err == pgx.ErrNoRows {
+			user.ID = -1
 			return user, nil
 		}
 		return user, err
