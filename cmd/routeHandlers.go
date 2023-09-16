@@ -38,3 +38,12 @@ func UserLogin(db *pgx.Conn) gin.HandlerFunc {
 	}
 
 }
+
+func UserRegister(db *pgx.Conn) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		bytes, _ := ctx.GetRawData()
+		data := string(bytes[:])
+		fmt.Printf("%+v\n", data)
+	}
+
+}

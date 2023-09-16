@@ -22,6 +22,7 @@ func main() {
 	router := gin.Default()
 
 	router.POST("/login", UserLogin(db))
+	router.POST("/register", UserRegister(db))
 	router.Use(spa.Middleware("/", "../build"))
 
 	router.Run(":5000")
