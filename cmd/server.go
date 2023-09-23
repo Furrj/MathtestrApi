@@ -13,7 +13,10 @@ func main() {
 	db := OpenDBConnection()
 	defer db.Close(context.Background())
 
-	userList, _ := GetAllUsers(db)
+	userList, err := GetAllUsers(db)
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+	}
 	for _, user := range userList {
 		fmt.Printf("%+v\n", user)
 	}
@@ -21,8 +24,8 @@ func main() {
 	// Routing
 	router := gin.Default()
 
-	router.POST("/login", UserLogin(db))
-	router.POST("/register", UserRegister(db))
+	router.POST("/login", LoginPost(db))
+	router.POST("/register", RegisterPost(db))
 	router.Use(spa.Middleware("/", "../build"))
 
 	router.Run(":5000")

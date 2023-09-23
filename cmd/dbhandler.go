@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/jackc/pgx/v5"
 )
 
 func OpenDBConnection() *pgx.Conn {
-	connection_string := "postgres://postgres:password@localhost:5432/testdb"
+	connection_string := "postgres://postgres:password@localhost:5432/mathtestr"
 	db, err := pgx.Connect(context.Background(), connection_string)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
@@ -18,9 +19,9 @@ func OpenDBConnection() *pgx.Conn {
 	return db
 }
 
-func FindByUsername(db *pgx.Conn, username string) (User, error) {
-	var user User
-	err := db.QueryRow(context.Background(), "SELECT * FROM account_info WHERE username=$1", username).Scan(&user.ID, &user.Username, &user.Password)
+func FindByUsername(db *pgx.Conn, username string) (UserClientData, error) {
+	var user UserClientData
+	err := db.QueryRow(context.Background(), "SELECT * FROM user_info WHERE username=$1", username).Scan(&user.ID, &user.Username)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			user.ID = -1
@@ -40,23 +41,14 @@ func DeleteByUsername(db *pgx.Conn, name string) error {
 	return nil
 }
 
-func AddUser(db *pgx.Conn, user User) error {
-	_, err := db.Exec(context.Background(), "INSERT INTO account_info (username, password) VALUES ($1, $2)", user.Username, user.Password)
-	if err != nil {
-		return err
-	}
-	fmt.Println("Success")
-	return nil
-}
+func GetAllUsers(db *pgx.Conn) ([]UserClientData, error) {
+	var userList []UserClientData
 
-func GetAllUsers(db *pgx.Conn) ([]User, error) {
-	var userList []User
-
-	rows, err := db.Query(context.Background(), "select * from account_info")
+	rows, err := db.Query(context.Background(), "SELECT user_id, username, uuid FROM user_info NATURAL JOIN session_data")
 
 	for rows.Next() {
-		var user User
-		rows.Scan(&user.ID, &user.Username, &user.Password)
+		var user UserClientData
+		rows.Scan(&user.ID, &user.Username, &user.UUID)
 		userList = append(userList, user)
 		if err != nil {
 			return userList, err
@@ -68,4 +60,13 @@ func GetAllUsers(db *pgx.Conn) ([]User, error) {
 	}
 
 	return userList, nil
+}
+
+func InsertUser(db *pgx.Conn, userInfo RegisterPayload) error {
+	_, err := db.Exec(context.Background(), "INSERT INTO user_info (username, password, first_name, last_name) VALUES ($1, $2, $3, $4)", userInfo.Username, userInfo.Password, userInfo.FirstName, userInfo.LastName)
+	if err != nil {
+		log.Printf("Error inserting user: %+v\n", err)
+		return err
+	}
+	return nil
 }
