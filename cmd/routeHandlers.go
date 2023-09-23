@@ -21,6 +21,7 @@ func RegisterPost(db *pgx.Conn) gin.HandlerFunc {
 		var registerResponse RegisterResponse
 		registerResponse.Valid = false
 
+		// Marshall JSON from request body
 		if err := ctx.BindJSON(&registerPayload); err != nil {
 			log.Printf("Error binding register payload:\n%+v\n", err)
 			ctx.String(http.StatusNotFound, "Error")
@@ -28,22 +29,29 @@ func RegisterPost(db *pgx.Conn) gin.HandlerFunc {
 		}
 		fmt.Printf("%+v\n", registerPayload)
 
+		// Check if username exists
 		user, err := FindByUsername(db, registerPayload.Username)
 		if err != nil {
-			ctx.String(http.StatusBadRequest, "Error")
+			log.Print("Error in FindByUsername")
+			ctx.String(http.StatusBadRequest, "Error in FindByUsername")
 			return
 		}
+
+		// If username doesn't exist
 		if user.ID == -1 {
-			if err := InsertUser(db, registerPayload); err != nil {
-				ctx.String(http.StatusConflict, "Error")
+			createdUserClientData, err := CreateNewUser(db, registerPayload)
+			if err != nil {
+				log.Print("Error in CreateUser")
+				ctx.String(http.StatusBadRequest, "Error in CreateUser")
+				return
 			}
+
 			registerResponse.Valid = true
-			registerResponse.User.ID = 1
-			registerResponse.User.Username = registerPayload.Username
+			registerResponse.User = createdUserClientData
 			ctx.JSON(http.StatusOK, registerResponse)
 			return
 		}
-		ctx.JSON(http.StatusOK, registerResponse)
+		ctx.String(http.StatusBadRequest, "Error")
 	}
 
 }

@@ -1,6 +1,6 @@
 CREATE DATABASE mathtestr;
 
-/c mathtestr
+\c mathtestr
 
 CREATE TABLE user_info (
     user_id SERIAL PRIMARY KEY,

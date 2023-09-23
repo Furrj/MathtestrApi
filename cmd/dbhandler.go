@@ -21,8 +21,9 @@ func OpenDBConnection() *pgx.Conn {
 
 func FindByUsername(db *pgx.Conn, username string) (UserClientData, error) {
 	var user UserClientData
-	err := db.QueryRow(context.Background(), "SELECT * FROM user_info WHERE username=$1", username).Scan(&user.ID, &user.Username)
+	err := db.QueryRow(context.Background(), "SELECT user_id, username FROM user_info WHERE username=$1", username).Scan(&user.ID, &user.Username)
 	if err != nil {
+		log.Printf("%+v\n", err)
 		if err == pgx.ErrNoRows {
 			user.ID = -1
 			return user, nil
@@ -68,5 +69,12 @@ func InsertUser(db *pgx.Conn, userInfo RegisterPayload) error {
 		log.Printf("Error inserting user: %+v\n", err)
 		return err
 	}
+
 	return nil
+}
+
+func InsertSessionData(db *pgx.Conn, sessionData SessionData) error {
+	_, err := db.Exec(context.Background(), "Insert INTO session_data (user_id, uuid, expires) VALUES ($1, $2, $3)", sessionData.ID, sessionData.UUID, sessionData.Expires)
+	log.Printf("Error inserting session data: %+v\n", err)
+	return err
 }
