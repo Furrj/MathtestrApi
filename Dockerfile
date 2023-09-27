@@ -4,12 +4,13 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod downloadg
+RUN go mod download
 
 ADD cmd ./cmd
+ADD internal ./internal
 ADD build ./build
 
-RUN go build -o server server.go
+RUN go build -o server cmd/server.go
 
 EXPOSE 5000
 
