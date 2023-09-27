@@ -6,14 +6,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mandrigin/gin-spa/spa"
+	"mathtestr.com/server/internal/dbHandlers"
+	"mathtestr.com/server/internal/routeHandlers"
 )
 
 func main() {
 	// DB
-	db := OpenDBConnection()
+	db := dbHandlers.OpenDBConnection()
 	defer db.Close(context.Background())
 
-	userList, err := GetAllUsers(db)
+	userList, err := dbHandlers.GetAllUsers(db)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 	}
@@ -24,8 +26,8 @@ func main() {
 	// Routing
 	router := gin.Default()
 
-	router.POST("/login", LoginPost(db))
-	router.POST("/register", RegisterPost(db))
+	router.POST("/login", routeHandlers.LoginPost(db))
+	router.POST("/register", routeHandlers.RegisterPost(db))
 	router.Use(spa.Middleware("/", "../build"))
 
 	router.Run(":5000")

@@ -9,8 +9,8 @@ RUN go mod download
 ADD cmd ./cmd
 ADD build ./build
 
-WORKDIR /app/cmd
+RUN go build -o server server.go
 
 EXPOSE 5000
 
-CMD ["go", "run", "."]
+CMD ["./server"]
