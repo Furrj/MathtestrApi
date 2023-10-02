@@ -28,7 +28,7 @@ func main() {
 
 	router.POST("/login", routeHandlers.LoginPost(db))
 	router.POST("/register", routeHandlers.RegisterPost(db))
-	router.Use(spa.Middleware("/", "../build"))
+	router.Use(spa.Middleware("/", "client"))
 
 	router.Run(":5000")
 }
