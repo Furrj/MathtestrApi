@@ -4,31 +4,34 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gin-gonic/gin"
-	"github.com/mandrigin/gin-spa/spa"
 	"mathtestr.com/server/internal/dbHandlers"
-	"mathtestr.com/server/internal/routeHandlers"
 )
 
 func main() {
 	// DB
-	db := dbHandlers.OpenDBConnection()
-	defer db.Close(context.Background())
+	dbHandler := dbHandlers.InitDBHandler()
+	defer dbHandler.DB.Close(context.Background())
 
-	userList, err := dbHandlers.GetAllUsers(db)
+	user, err := dbHandler.GetUserByUsername("a")
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 	}
-	for _, user := range userList {
-		fmt.Printf("%+v\n", user)
-	}
+	fmt.Printf("%+v\n", user)
 
-	// Routing
-	router := gin.Default()
+	// userList, err := dbHandlers.GetAllUsers(db)
+	// if err != nil {
+	// 	fmt.Printf("%+v\n", err)
+	// }
+	// for _, user := range userList {
+	// 	fmt.Printf("%+v\n", user)
+	// }
 
-	router.POST("/login", routeHandlers.LoginPost(db))
-	router.POST("/register", routeHandlers.RegisterPost(db))
-	router.Use(spa.Middleware("/", "client"))
+	// // Routing
+	// router := gin.Default()
 
-	router.Run(":5000")
+	// router.POST("/login", routeHandlers.LoginPost(db))
+	// router.POST("/register", routeHandlers.RegisterPost(db))
+	// router.Use(spa.Middleware("/", "client"))
+
+	// router.Run(":5000")
 }

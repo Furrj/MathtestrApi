@@ -6,10 +6,11 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5"
+	"mathtestr.com/server/internal/types"
 )
 
 type dbHandler struct {
-	db *pgx.Conn
+	DB *pgx.Conn
 }
 
 func InitDBHandler() *dbHandler {
@@ -20,13 +21,13 @@ func InitDBHandler() *dbHandler {
 		fmt.Printf("%+v\n", err)
 		os.Exit(1)
 	}
-	newDBHandler.db = db
+	newDBHandler.DB = db
 	return &newDBHandler
 }
 
 func (dbHandler *dbHandler) CheckIfUsernameExists(username string) (bool, error) {
 	var returnedUsername string
-	err := dbHandler.db.QueryRow(context.Background(), "SELECT username FROM user_info WHERE username=$1", username).Scan(&returnedUsername)
+	err := dbHandler.DB.QueryRow(context.Background(), QCheckIfUsernameExists, username).Scan(&returnedUsername)
 	if err == pgx.ErrNoRows {
 		return false, nil
 	}
@@ -34,4 +35,13 @@ func (dbHandler *dbHandler) CheckIfUsernameExists(username string) (bool, error)
 		return false, err
 	}
 	return true, nil
+}
+
+func (dbHandler *dbHandler) GetUserByUsername(username string) (types.AllUserData, error) {
+	var user types.AllUserData
+	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.Firstname, &user.Lastname, &user.UUID, &user.Expires)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }
