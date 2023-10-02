@@ -56,5 +56,8 @@ func RegisterPost(db *pgx.Conn) gin.HandlerFunc {
 		}
 		ctx.String(http.StatusBadRequest, "Error")
 	}
+}
 
+func Register(ctx *gin.Context) {
+	ctx.String(http.StatusOK, "Success")
 }
