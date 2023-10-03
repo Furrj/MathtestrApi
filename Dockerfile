@@ -8,7 +8,12 @@ RUN go mod download
 
 ADD cmd ./cmd
 ADD internal ./internal
-ADD build ./build
+ADD client ./client
+
+ENV MODE=PROD
+ENV DB_URL=postgres://postgres:password@localhost:5432/mathtestr
+ENV DB_URL=postgres://postgres:password@localhost:5432/test
+ENV GIN_MODE=release
 
 RUN go build -o server cmd/server.go
 

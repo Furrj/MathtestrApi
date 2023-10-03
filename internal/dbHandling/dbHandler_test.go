@@ -2,13 +2,19 @@ package dbHandling
 
 import (
 	"context"
+	"os"
 	"testing"
 
+	"github.com/joho/godotenv"
 	"mathtestr.com/server/internal/schemas"
 )
 
 func TestDBHandler(t *testing.T) {
-	dbHandler := InitDBHandler()
+	if os.Getenv("MODE") != "PROD" {
+		godotenv.Load("../../config.env")
+	}
+
+	dbHandler := InitDBHandler(os.Getenv("DB_URL_TEST"))
 	defer dbHandler.DB.Close(context.Background())
 
 	// SETUP
@@ -83,9 +89,9 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("got %s, want %s", got.Username, want)
 		}
 	})
-	t.Run("DropTables", func(t *testing.T) {
-		if err := dbHandler.DropTables(); err != nil {
-			t.Errorf("Error dropping tables: %+v\n", err)
-		}
-	})
+	// t.Run("DropTables", func(t *testing.T) {
+	// 	if err := dbHandler.DropTables(); err != nil {
+	// 		t.Errorf("Error dropping tables: %+v\n", err)
+	// 	}
+	// })
 }

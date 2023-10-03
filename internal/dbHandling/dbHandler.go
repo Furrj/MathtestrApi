@@ -14,11 +14,9 @@ type DBHandler struct {
 	DB *pgx.Conn
 }
 
-func InitDBHandler() *DBHandler {
+func InitDBHandler(connectionString string) *DBHandler {
 	var newDBHandler DBHandler
-	//connection_string := "postgres://postgres:password@localhost:5432/mathtestr"
-	connection_string := "postgres://postgres:password@host.docker.internal:5432/mathtestr"
-	db, err := pgx.Connect(context.Background(), connection_string)
+	db, err := pgx.Connect(context.Background(), connectionString)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		os.Exit(1)

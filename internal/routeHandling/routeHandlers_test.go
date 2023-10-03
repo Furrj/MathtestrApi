@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	dbHandlers "mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/dbHandling"
 	"mathtestr.com/server/internal/schemas"
 )
 
 func TestRouteHandlers(t *testing.T) {
-	dbHandler := dbHandlers.InitDBHandler()
+	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL_TEST"))
 	routeHandler := InitRouteHandler(dbHandler)
 
 	t.Run("Register", func(t *testing.T) {

@@ -3,15 +3,23 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
-	dbHandlers "mathtestr.com/server/internal/dbHandling"
+	"github.com/joho/godotenv"
+	"mathtestr.com/server/internal/dbHandling"
 	"mathtestr.com/server/internal/routeHandling"
 )
 
 func main() {
+	if os.Getenv("MODE") != "PROD" {
+		godotenv.Load("../config.env")
+	}
+
+	fmt.Println(os.Getenv("MODE"))
+
 	// DB
-	dbHandler := dbHandlers.InitDBHandler()
+	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL"))
 	defer dbHandler.DB.Close(context.Background())
 
 	user, err := dbHandler.GetUserByUsername("a")

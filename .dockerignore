@@ -2,3 +2,4 @@
 docker-compost.yaml
 Dockerfile
 init.sql
+config.env
