@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mandrigin/gin-spa/spa"
 	"mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/logger"
 	"mathtestr.com/server/internal/routeHandling"
 )
 
@@ -25,6 +26,7 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		log.Printf("Error backing up Postgres: %+v\n", err)
 	}
+	logger.WriteLog("test")
 
 	// DB
 	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL"))

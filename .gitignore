@@ -2,4 +2,4 @@
 server
 *.exe
 config.env
-logs/*
+logs/
