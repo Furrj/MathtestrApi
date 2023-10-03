@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/mandrigin/gin-spa/spa"
 	"mathtestr.com/server/internal/dbHandling"
-	"mathtestr.com/server/internal/logger"
 	"mathtestr.com/server/internal/routeHandling"
 )
 
@@ -18,7 +19,12 @@ func main() {
 	if os.Getenv("MODE") != "PROD" {
 		godotenv.Load("config.env")
 	}
-	logger.WriteLog("Hellos")
+
+	// Test backup
+	cmd := exec.Command("./backup.sh")
+	if err := cmd.Run(); err != nil {
+		log.Printf("Error backing up Postgres: %+v\n", err)
+	}
 
 	// DB
 	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL"))
