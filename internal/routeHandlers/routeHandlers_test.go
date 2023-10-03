@@ -9,13 +9,17 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"mathtestr.com/server/internal/dbHandlers"
 	"mathtestr.com/server/internal/types"
 )
 
 func TestRouteHandlers(t *testing.T) {
+	dbHandler := dbHandlers.InitDBHandler()
+	routeHandler := InitRouteHandler(dbHandler)
+
 	t.Run("Register", func(t *testing.T) {
 		registerPayload := types.RegisterPayload{
-			Username:  "Poemmys",
+			Username:  "a",
 			Password:  "password",
 			FirstName: "Jackson",
 			LastName:  "Furr",
@@ -25,10 +29,10 @@ func TestRouteHandlers(t *testing.T) {
 		gin.SetMode(gin.TestMode)
 
 		w := httptest.NewRecorder()
-		r, _ := http.NewRequest(http.MethodPost, "/register", bytes.NewReader(marshalled))
-
 		_, router := gin.CreateTestContext(w)
-		router.POST("/register", Register)
+
+		r, _ := http.NewRequest(http.MethodPost, "/register", bytes.NewReader(marshalled))
+		router.POST("/register", routeHandler.Register)
 		router.ServeHTTP(w, r)
 
 		fmt.Println(w.Body.String())
