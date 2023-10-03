@@ -12,6 +12,12 @@ const QGetUserByUsername = `
 	WHERE username=$1
 `
 
+const QGetUserIDByUsername = `
+	SELECT user_id
+	FROM user_info
+	WHERE username=$1
+`
+
 // INSERT
 const EInsertUser = `
 	INSERT INTO user_info (username, password, first_name, last_name)

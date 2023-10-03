@@ -89,9 +89,19 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("got %s, want %s", got.Username, want)
 		}
 	})
-	// t.Run("DropTables", func(t *testing.T) {
-	// 	if err := dbHandler.DropTables(); err != nil {
-	// 		t.Errorf("Error dropping tables: %+v\n", err)
-	// 	}
-	// })
+	t.Run("GetUserIDByUsername", func(t *testing.T) {
+		got, err := dbHandler.GetUserIDByUsername("a")
+		want := 1
+		if err != nil {
+			t.Errorf("Error searching for ID by username: %+v\n", err)
+		}
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+	t.Run("DropTables", func(t *testing.T) {
+		if err := dbHandler.DropTables(); err != nil {
+			t.Errorf("Error dropping tables: %+v\n", err)
+		}
+	})
 }

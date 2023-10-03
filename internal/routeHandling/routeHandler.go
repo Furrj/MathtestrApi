@@ -28,12 +28,15 @@ Sends: RegisterResponse or ErrorCode
 func (r *RouteHandler) Register(ctx *gin.Context) {
 	var registerPayload schemas.RegisterPayload
 
+	// Bind request body
 	if err := ctx.BindJSON(&registerPayload); err != nil {
 		fmt.Printf("Error binding json: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
+	fmt.Printf("%+v\n", registerPayload)
 
+	// Check if username currently exists
 	exists, err := r.dbHandler.CheckIfUsernameExists(registerPayload.Username)
 	if err != nil {
 		fmt.Printf("Error checking username validity: %+v\n", err)
@@ -44,7 +47,19 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Username already exists")
 		return
 	}
-	ctx.String(http.StatusOK, "Username valid")
+
+	// Insert into user_info
+	if err := r.dbHandler.InsertUser(registerPayload); err != nil {
+		fmt.Printf("Error inserting user from /register: %+v\n", err)
+		return
+	}
+
+	// Get ID from newly inserted user
+	id, err := r.dbHandler.GetUserIDByUsername(registerPayload.Username)
+	if err != nil {
+		fmt.Printf("Error searching for newly inserted user: %+v\n", err)
+	}
+	ctx.String(http.StatusOK, fmt.Sprint(id))
 }
 
 // func RegisterPost(db *pgx.Conn) gin.HandlerFunc {

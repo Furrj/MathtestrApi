@@ -46,6 +46,15 @@ func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserD
 	return user, nil
 }
 
+func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
+	var id int
+	err := dbHandler.DB.QueryRow(context.Background(), QGetUserIDByUsername, username).Scan(&id)
+	if err != nil {
+		return -1, err
+	}
+	return id, nil
+}
+
 func (dbHandler *DBHandler) InsertUser(r schemas.RegisterPayload) error {
 	_, err := dbHandler.DB.Exec(context.Background(), EInsertUser, r.Username, r.Password, r.FirstName, r.LastName)
 	if err != nil {
