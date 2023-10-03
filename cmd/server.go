@@ -16,8 +16,6 @@ func main() {
 		godotenv.Load("../config.env")
 	}
 
-	fmt.Println(os.Getenv("MODE"))
-
 	// DB
 	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL"))
 	defer dbHandler.DB.Close(context.Background())

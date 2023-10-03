@@ -10,11 +10,16 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"mathtestr.com/server/internal/dbHandling"
 	"mathtestr.com/server/internal/schemas"
 )
 
 func TestRouteHandlers(t *testing.T) {
+	if os.Getenv("MODE") != "PROD" {
+		godotenv.Load("../../config.env")
+	}
+
 	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL_TEST"))
 	routeHandler := InitRouteHandler(dbHandler)
 

@@ -11,8 +11,8 @@ ADD internal ./internal
 ADD client ./client
 
 ENV MODE=PROD
-ENV DB_URL=postgres://postgres:password@localhost:5432/mathtestr
-ENV DB_URL=postgres://postgres:password@localhost:5432/test
+ENV DB_URL=postgres://postgres:password@host.docker.internal:5432/mathtestr
+ENV DB_URL_TEST=postgres://postgres:password@host.docker.internal:5432/test
 ENV GIN_MODE=release
 
 RUN go build -o server cmd/server.go
