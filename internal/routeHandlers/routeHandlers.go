@@ -59,5 +59,10 @@ func RegisterPost(db *pgx.Conn) gin.HandlerFunc {
 }
 
 func Register(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Success")
+	var registerPayload types.RegisterPayload
+	if err := ctx.BindJSON(&registerPayload); err != nil {
+		fmt.Printf("Error binding json: %+v\n", err)
+		return
+	}
+	fmt.Printf("Binded json: %+v\n", registerPayload)
 }
