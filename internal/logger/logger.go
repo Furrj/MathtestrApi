@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -17,5 +18,6 @@ func WriteLog(data string) {
 	}
 	defer f.Close()
 
-	f.WriteString(data + "\n")
+	logger := log.New(f, "INFO ", log.LstdFlags)
+	logger.Println(data)
 }
