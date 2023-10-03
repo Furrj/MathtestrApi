@@ -2,6 +2,7 @@ package routeHandling
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -22,8 +23,13 @@ func TestRouteHandlers(t *testing.T) {
 
 	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL_TEST"))
 	routeHandler := InitRouteHandler(dbHandler)
+	defer routeHandler.dbHandler.DB.Close(context.Background())
 
 	t.Run("Register", func(t *testing.T) {
+		if err := dbHandler.CreateTables(); err != nil {
+			t.Errorf("Error creating tables: %+v\n", err)
+		}
+
 		registerPayload := schemas.RegisterPayload{
 			Username:  "a",
 			Password:  "password",
@@ -42,5 +48,18 @@ func TestRouteHandlers(t *testing.T) {
 		router.ServeHTTP(w, r)
 
 		fmt.Println(w.Body.String())
+		if !checkIfUserInserted(t, routeHandler, registerPayload) {
+			t.Errorf("User could not be found, problem inserting")
+		}
+
+		if err := dbHandler.DropTables(); err != nil {
+			t.Errorf("Error dropping tables: %+v\n", err)
+		}
 	})
+}
+
+func checkIfUserInserted(t *testing.T, r *RouteHandler, p schemas.RegisterPayload) bool {
+	t.Helper()
+	bool, _ := r.dbHandler.CheckIfUsernameExists(p.Username)
+	return bool
 }
