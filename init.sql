@@ -20,7 +20,7 @@ CREATE TABLE session_data(
 );
 
 INSERT INTO user_info (username, password, first_name, last_name)
-VALUES ('poemmys', 'pad89!', 'Jackson', 'Furr');
+VALUES ('a', 'pad89!', 'Jackson', 'Furr');
 
 SELECT * FROM user_info;
 

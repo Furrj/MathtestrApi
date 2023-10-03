@@ -12,6 +12,8 @@ func main() {
 	dbHandler := dbHandlers.InitDBHandler()
 	defer dbHandler.DB.Close(context.Background())
 
+	//routeHandler := routeHandlers.InitRouteHandler(dbHandler)
+
 	user, err := dbHandler.GetUserByUsername("a")
 	if err != nil {
 		fmt.Printf("%+v\n", err)
