@@ -1,4 +1,4 @@
-package dbHandlers
+package dbHandling
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5"
-	"mathtestr.com/server/internal/types"
+	"mathtestr.com/server/internal/schemas"
 )
 
 type DBHandler struct {
@@ -38,8 +38,8 @@ func (dbHandler *DBHandler) CheckIfUsernameExists(username string) (bool, error)
 	return true, nil
 }
 
-func (dbHandler *DBHandler) GetUserByUsername(username string) (types.AllUserData, error) {
-	var user types.AllUserData
+func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserData, error) {
+	var user schemas.AllUserData
 	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.Firstname, &user.Lastname, &user.UUID, &user.Expires)
 	if err != nil {
 		return user, err

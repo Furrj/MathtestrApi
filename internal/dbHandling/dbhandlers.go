@@ -1,4 +1,4 @@
-package dbHandlers
+package dbHandling
 
 import (
 	"context"
@@ -6,11 +6,11 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5"
-	"mathtestr.com/server/internal/types"
+	"mathtestr.com/server/internal/schemas"
 )
 
-func FindByUsername(db *pgx.Conn, username string) (types.UserClientData, error) {
-	var user types.UserClientData
+func FindByUsername(db *pgx.Conn, username string) (schemas.UserClientData, error) {
+	var user schemas.UserClientData
 	err := db.QueryRow(context.Background(), "SELECT user_id, username FROM user_info WHERE username=$1", username).Scan(&user.ID, &user.Username)
 	if err != nil {
 		log.Printf("%+v\n", err)
@@ -32,13 +32,13 @@ func DeleteByUsername(db *pgx.Conn, name string) error {
 	return nil
 }
 
-func GetAllUsers(db *pgx.Conn) ([]types.UserClientData, error) {
-	var userList []types.UserClientData
+func GetAllUsers(db *pgx.Conn) ([]schemas.UserClientData, error) {
+	var userList []schemas.UserClientData
 
 	rows, err := db.Query(context.Background(), "SELECT user_id, username, uuid FROM user_info NATURAL JOIN session_data")
 
 	for rows.Next() {
-		var user types.UserClientData
+		var user schemas.UserClientData
 		rows.Scan(&user.ID, &user.Username, &user.UUID)
 		userList = append(userList, user)
 		if err != nil {
@@ -53,7 +53,7 @@ func GetAllUsers(db *pgx.Conn) ([]types.UserClientData, error) {
 	return userList, nil
 }
 
-func InsertUser(db *pgx.Conn, userInfo types.RegisterPayload) error {
+func InsertUser(db *pgx.Conn, userInfo schemas.RegisterPayload) error {
 	_, err := db.Exec(context.Background(), "INSERT INTO user_info (username, password, first_name, last_name) VALUES ($1, $2, $3, $4)", userInfo.Username, userInfo.Password, userInfo.FirstName, userInfo.LastName)
 	if err != nil {
 		log.Printf("Error inserting user: %+v\n", err)
@@ -63,7 +63,7 @@ func InsertUser(db *pgx.Conn, userInfo types.RegisterPayload) error {
 	return nil
 }
 
-func InsertSessionData(db *pgx.Conn, sessionData types.SessionData) error {
+func InsertSessionData(db *pgx.Conn, sessionData schemas.SessionData) error {
 	_, err := db.Exec(context.Background(), "Insert INTO session_data (user_id, uuid, expires) VALUES ($1, $2, $3)", sessionData.ID, sessionData.UUID, sessionData.Expires)
 	log.Printf("Error inserting session data: %+v\n", err)
 	return err

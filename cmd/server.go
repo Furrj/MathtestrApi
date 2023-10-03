@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"mathtestr.com/server/internal/dbHandlers"
+	dbHandlers "mathtestr.com/server/internal/dbHandling"
 )
 
 func main() {

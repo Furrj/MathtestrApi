@@ -5,15 +5,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"mathtestr.com/server/internal/dbHandlers"
-	"mathtestr.com/server/internal/types"
+	"mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/schemas"
 )
 
 type RouteHandler struct {
-	dbHandler *dbHandlers.DBHandler
+	dbHandler *dbHandling.DBHandler
 }
 
-func InitRouteHandler(dbHandler *dbHandlers.DBHandler) *RouteHandler {
+func InitRouteHandler(dbHandler *dbHandling.DBHandler) *RouteHandler {
 	newRouteHandler := RouteHandler{
 		dbHandler: dbHandler,
 	}
@@ -26,7 +26,7 @@ Recieves: RegisterPayload
 Sends: RegisterResponse or ErrorCode
 */
 func (r *RouteHandler) Register(ctx *gin.Context) {
-	var registerPayload types.RegisterPayload
+	var registerPayload schemas.RegisterPayload
 
 	if err := ctx.BindJSON(&registerPayload); err != nil {
 		fmt.Printf("Error binding json: %+v\n", err)
@@ -49,8 +49,8 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 
 // func RegisterPost(db *pgx.Conn) gin.HandlerFunc {
 // 	return func(ctx *gin.Context) {
-// 		var registerPayload types.RegisterPayload
-// 		var registerResponse types.RegisterResponse
+// 		var registerPayload schemas.RegisterPayload
+// 		var registerResponse schemas.RegisterResponse
 // 		registerResponse.Valid = false
 
 // 		// Marshall JSON from request body
@@ -62,7 +62,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 // 		fmt.Printf("%+v\n", registerPayload)
 
 // 		// Check if username exists
-// 		user, err := dbHandlers.FindByUsername(db, registerPayload.Username)
+// 		user, err := dbHandling.FindByUsername(db, registerPayload.Username)
 // 		if err != nil {
 // 			log.Print("Error in FindByUsername")
 // 			ctx.String(http.StatusBadRequest, "Error in FindByUsername")

@@ -1,4 +1,4 @@
-package types
+package schemas
 
 type UserClientData struct {
 	ID       int64  `json:"user_id"`

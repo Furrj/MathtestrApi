@@ -7,33 +7,33 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"mathtestr.com/server/internal/dbHandlers"
-	"mathtestr.com/server/internal/types"
+	"mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/schemas"
 )
 
-func CreateNewUser(db *pgx.Conn, registerPayload types.RegisterPayload) (types.UserClientData, error) {
-	var userClientData types.UserClientData
+func CreateNewUser(db *pgx.Conn, registerPayload schemas.RegisterPayload) (schemas.UserClientData, error) {
+	var userClientData schemas.UserClientData
 
 	// Insert user using registerPayload
-	if err := dbHandlers.InsertUser(db, registerPayload); err != nil {
+	if err := dbHandling.InsertUser(db, registerPayload); err != nil {
 		return userClientData, err
 	}
 
 	// Get ID from created, user/doublecheck insert was correct
-	createdUser, err := dbHandlers.FindByUsername(db, registerPayload.Username)
+	createdUser, err := dbHandling.FindByUsername(db, registerPayload.Username)
 	if err != nil {
 		log.Print("Error in FindByUsername")
 		return userClientData, err
 	}
 
 	// Create user session data
-	userSessionData := types.SessionData{
+	userSessionData := schemas.SessionData{
 		ID:      createdUser.ID,
 		UUID:    uuid.New().String(),
 		Expires: strconv.FormatInt(time.Now().Unix()+7776000, 10),
 	}
 
-	if err := dbHandlers.InsertSessionData(db, userSessionData); err != nil {
+	if err := dbHandling.InsertSessionData(db, userSessionData); err != nil {
 		return userClientData, err
 	}
 

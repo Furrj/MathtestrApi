@@ -9,8 +9,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"mathtestr.com/server/internal/dbHandlers"
-	"mathtestr.com/server/internal/types"
+	dbHandlers "mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/schemas"
 )
 
 func TestRouteHandlers(t *testing.T) {
@@ -18,7 +18,7 @@ func TestRouteHandlers(t *testing.T) {
 	routeHandler := InitRouteHandler(dbHandler)
 
 	t.Run("Register", func(t *testing.T) {
-		registerPayload := types.RegisterPayload{
+		registerPayload := schemas.RegisterPayload{
 			Username:  "a",
 			Password:  "password",
 			FirstName: "Jackson",

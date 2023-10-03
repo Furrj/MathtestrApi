@@ -1,4 +1,4 @@
-package dbHandlers
+package dbHandling
 
 const QCheckIfUsernameExists = "SELECT username FROM user_info WHERE username=$1"
 const QGetUserByUsername = `
