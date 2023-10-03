@@ -3,6 +3,7 @@ package dbHandling
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/jackc/pgx/v5"
@@ -45,4 +46,43 @@ func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserD
 		return user, err
 	}
 	return user, nil
+}
+
+func (dbHandler *DBHandler) InsertUser(r schemas.RegisterPayload) error {
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertUser, r.Username, r.Password, r.FirstName, r.LastName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (dbHandler *DBHandler) InsertSessionData(s schemas.SessionData) error {
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertSessionData, s.ID, s.UUID, s.Expires)
+	if err != nil {
+		log.Printf("Error inserting session data: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+func (dbHandler *DBHandler) DropTables() error {
+	if _, err := dbHandler.DB.Exec(context.Background(), EDeleteAllSessionData); err != nil {
+		fmt.Printf("Error deleting session_data info: %+v\n", err)
+		return err
+	}
+	if _, err := dbHandler.DB.Exec(context.Background(), EDeleteAllUserInfo); err != nil {
+		fmt.Printf("Error deleting user_info info: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+func (dbHandler *DBHandler) CreateTables() error {
+	if _, err := dbHandler.DB.Exec(context.Background(), EInitUserInfo); err != nil {
+		fmt.Printf("Error initializing user_info: %+v\n", err)
+	}
+	if _, err := dbHandler.DB.Exec(context.Background(), EInitSessionData); err != nil {
+		fmt.Printf("Error initializing session_data: %+v\n", err)
+	}
+	return nil
 }

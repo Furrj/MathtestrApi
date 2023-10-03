@@ -3,13 +3,13 @@ package schemas
 type UserClientData struct {
 	ID       int64  `json:"user_id"`
 	Username string `json:"username"`
-	UUID     string `json:"uuid"`
+	UUID     uint64 `json:"uuid"`
 }
 
 type SessionData struct {
 	ID      int64  `json:"user_id"`
 	UUID    string `json:"uuid"`
-	Expires string `json:"expires"`
+	Expires uint64 `json:"expires"`
 }
 
 type AllUserData struct {
