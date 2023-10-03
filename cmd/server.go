@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	dbHandlers "mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/routeHandling"
 )
 
 func main() {
@@ -12,13 +14,16 @@ func main() {
 	dbHandler := dbHandlers.InitDBHandler()
 	defer dbHandler.DB.Close(context.Background())
 
-	//routeHandler := routeHandlers.InitRouteHandler(dbHandler)
-
 	user, err := dbHandler.GetUserByUsername("a")
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 	}
 	fmt.Printf("%+v\n", user)
+
+	routeHandler := routeHandling.InitRouteHandler(dbHandler)
+	router := gin.Default()
+	router.POST("/register", routeHandler.Register)
+	router.Run(":5000")
 
 	// userList, err := dbHandlers.GetAllUsers(db)
 	// if err != nil {

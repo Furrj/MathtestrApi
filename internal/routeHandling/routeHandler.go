@@ -1,4 +1,4 @@
-package routeHandlers
+package routeHandling
 
 import (
 	"fmt"
