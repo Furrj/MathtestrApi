@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"mathtestr.com/server/internal/dbHandling"
 	"mathtestr.com/server/internal/schemas"
+	"mathtestr.com/server/internal/userHandlers"
 )
 
 type RouteHandler struct {
@@ -59,7 +60,24 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error searching for newly inserted user: %+v\n", err)
 	}
-	ctx.String(http.StatusOK, fmt.Sprint(id))
+
+	// Generate and insert Session Data
+	sessionData := userHandlers.GenerateNewUserSessionData(id)
+	if err := r.dbHandler.InsertSessionData(sessionData); err != nil {
+		fmt.Printf("Error inserting session data: %+v\n", err)
+	}
+
+	// Generate and send response
+	userClientData := schemas.UserClientData{
+		ID:       sessionData.ID,
+		Username: registerPayload.Username,
+		UUID:     sessionData.UUID,
+	}
+	registerResponse := schemas.RegisterResponse{
+		Valid: true,
+		User:  userClientData,
+	}
+	ctx.JSON(http.StatusOK, registerResponse)
 }
 
 // func RegisterPost(db *pgx.Conn) gin.HandlerFunc {

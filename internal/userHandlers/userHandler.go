@@ -1,34 +1,17 @@
 package userHandlers
 
-// func CreateNewUser(db *pgx.Conn, registerPayload schemas.RegisterPayload) (schemas.UserClientData, error) {
-// 	var userClientData schemas.UserClientData
+import (
+	"time"
 
-// 	// Insert user using registerPayload
-// 	if err := dbHandling.InsertUser(db, registerPayload); err != nil {
-// 		return userClientData, err
-// 	}
+	"github.com/google/uuid"
+	"mathtestr.com/server/internal/schemas"
+)
 
-// 	// Get ID from created, user/doublecheck insert was correct
-// 	createdUser, err := dbHandling.FindByUsername(db, registerPayload.Username)
-// 	if err != nil {
-// 		log.Print("Error in FindByUsername")
-// 		return userClientData, err
-// 	}
-
-// 	// Create user session data
-// 	userSessionData := schemas.SessionData{
-// 		ID:      createdUser.ID,
-// 		UUID:    uuid.New().String(),
-// 		Expires: strconv.FormatInt(time.Now().Unix()+7776000, 10),
-// 	}
-
-// 	if err := dbHandling.InsertSessionData(db, userSessionData); err != nil {
-// 		return userClientData, err
-// 	}
-
-// 	userClientData.ID = userSessionData.ID
-// 	userClientData.UUID = userSessionData.UUID
-// 	userClientData.Username = registerPayload.Username
-
-// 	return userClientData, nil
-// }
+func GenerateNewUserSessionData(id int) schemas.SessionData {
+	userSessionData := schemas.SessionData{
+		ID:      uint32(id),
+		UUID:    uuid.New().String(),
+		Expires: uint64(time.Now().Unix() + 7776000),
+	}
+	return userSessionData
+}
