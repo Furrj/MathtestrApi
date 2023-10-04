@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func WriteLog(data string) {
+func WriteLog(routeType, data string) {
 	path, _ := os.Getwd()
 	path = fmt.Sprintf("%s/logs/routeLogs.txt", path)
 	fmt.Println("Path: " + path)
@@ -18,6 +18,6 @@ func WriteLog(data string) {
 	}
 	defer f.Close()
 
-	logger := log.New(f, "INFO ", log.LstdFlags)
+	logger := log.New(f, routeType, log.LstdFlags)
 	logger.Println(data)
 }
