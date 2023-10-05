@@ -38,6 +38,7 @@ func main() {
 	routeHandler := routeHandling.InitRouteHandler(dbHandler)
 	router := gin.Default()
 	router.POST("/register", routeHandler.Register)
+	router.POST("/validateSession", routeHandler.ValidateSession)
 	router.Use(spa.Middleware("/", "client"))
 	router.Run(":5000")
 }
