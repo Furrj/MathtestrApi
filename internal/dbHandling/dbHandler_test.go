@@ -26,9 +26,9 @@ func TestDBHandler(t *testing.T) {
 	}
 
 	testSessionData := schemas.SessionData{
-		ID:      1,
-		UUID:    "test_uuid",
-		Expires: 1234,
+		ID:         1,
+		SessionKey: "test_uuid",
+		Expires:    1234,
 	}
 
 	t.Run("Ping connection", func(t *testing.T) {

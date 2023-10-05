@@ -38,7 +38,7 @@ func GetAllUsers(db *pgx.Conn) ([]schemas.UserClientData, error) {
 
 	for rows.Next() {
 		var user schemas.UserClientData
-		rows.Scan(&user.ID, &user.Username, &user.UUID)
+		rows.Scan(&user.ID, &user.Username, &user.SessionKey)
 		userList = append(userList, user)
 		if err != nil {
 			return userList, err

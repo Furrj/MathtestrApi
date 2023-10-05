@@ -61,9 +61,9 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 
 	// Generate and send response
 	userClientData := schemas.UserClientData{
-		ID:       sessionData.ID,
-		Username: registerPayload.Username,
-		UUID:     sessionData.UUID,
+		ID:         sessionData.ID,
+		Username:   registerPayload.Username,
+		SessionKey: sessionData.SessionKey,
 	}
 	registerResponse := schemas.RegisterResponse{
 		Valid: true,

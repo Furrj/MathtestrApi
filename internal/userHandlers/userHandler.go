@@ -9,9 +9,9 @@ import (
 
 func GenerateNewUserSessionData(id int) schemas.SessionData {
 	userSessionData := schemas.SessionData{
-		ID:      uint32(id),
-		UUID:    uuid.New().String(),
-		Expires: uint64(time.Now().Unix() + 7776000),
+		ID:         uint32(id),
+		SessionKey: uuid.New().String(),
+		Expires:    uint64(time.Now().Unix() + 7776000),
 	}
 	return userSessionData
 }

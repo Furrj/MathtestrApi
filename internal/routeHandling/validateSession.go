@@ -17,5 +17,5 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
-	fmt.Printf("%+v\n", sessionData)
+	ctx.JSON(http.StatusOK, sessionData)
 }

@@ -21,7 +21,7 @@ func testSessionDataProps(t *testing.T, sessionData schemas.SessionData) bool {
 	if sessionData.ID < 1 || sessionData.Expires < uint64(time.Now().Unix()+7776000) {
 		return false
 	}
-	if len(sessionData.UUID) != 36 {
+	if len(sessionData.SessionKey) != 36 {
 		return false
 	}
 	return true
