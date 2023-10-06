@@ -3,4 +3,4 @@ server
 *.exe
 config.env
 logs/
-e2etest.sh
+run.sh
