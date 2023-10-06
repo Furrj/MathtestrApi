@@ -19,6 +19,8 @@ Sends: RegisterResponse or ErrorCode
 */
 func (r *RouteHandler) Register(ctx *gin.Context) {
 	var registerPayload schemas.RegisterPayload
+	var registerResponse schemas.RegisterResponse
+	registerResponse.Valid = false
 
 	// Bind request body
 	if err := ctx.BindJSON(&registerPayload); err != nil {
@@ -36,7 +38,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		return
 	}
 	if exists {
-		ctx.String(http.StatusNotFound, "Username already exists")
+		ctx.JSON(http.StatusOK, registerResponse)
 		return
 	}
 
@@ -65,10 +67,8 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		Username:   registerPayload.Username,
 		SessionKey: sessionData.SessionKey,
 	}
-	registerResponse := schemas.RegisterResponse{
-		Valid: true,
-		User:  userClientData,
-	}
+	registerResponse.Valid = true
+	registerResponse.User = userClientData
 
 	ctx.JSON(http.StatusOK, registerResponse)
 
