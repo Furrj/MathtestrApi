@@ -20,6 +20,7 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
+	fmt.Printf("%+v\n", sessionData)
 
 	exists, err := r.dbHandler.CheckIfUsernameExists(sessionData.Username)
 	if err != nil {
