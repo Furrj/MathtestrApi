@@ -3,4 +3,4 @@ server
 *.exe
 config.env
 logs/
-run.sh
+*.sh
