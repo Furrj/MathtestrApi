@@ -91,7 +91,7 @@ func TestRouteHandlers(t *testing.T) {
 		router.ServeHTTP(w, r)
 
 		json.Unmarshal(w.Body.Bytes(), &validationReponse)
-		if !validationReponse.Valid {
+		if validationReponse.Valid {
 			t.Error("Wanted invalid response, got valid")
 		}
 	})
