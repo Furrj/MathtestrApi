@@ -6,5 +6,6 @@ type LoginPayload struct {
 }
 
 type LoginResponse struct {
-	Valid bool `json:"valid"`
+	Valid bool           `json:"valid"`
+	User  UserClientData `json:"user"`
 }
