@@ -38,6 +38,7 @@ func TestRouteHandlers(t *testing.T) {
 			FirstName: "Jackson",
 			LastName:  "Furr",
 		}
+
 		marshalled, _ := json.Marshal(registerPayload)
 
 		gin.SetMode(gin.TestMode)
@@ -45,8 +46,8 @@ func TestRouteHandlers(t *testing.T) {
 		w := httptest.NewRecorder()
 		_, router := gin.CreateTestContext(w)
 
-		r, _ := http.NewRequest(http.MethodPost, "/register", bytes.NewReader(marshalled))
-		router.POST("/register", routeHandler.Register)
+		r, _ := http.NewRequest(http.MethodPost, "/api/register", bytes.NewReader(marshalled))
+		router.POST("/api/register", routeHandler.Register)
 		router.ServeHTTP(w, r)
 
 		json.Unmarshal(w.Body.Bytes(), &responseData)
@@ -66,8 +67,8 @@ func TestRouteHandlers(t *testing.T) {
 
 		marshalled, _ := json.Marshal(responseUserClientData)
 
-		r, _ := http.NewRequest(http.MethodPost, "/validateSession", bytes.NewReader(marshalled))
-		router.POST("/validateSession", routeHandler.ValidateSession)
+		r, _ := http.NewRequest(http.MethodPost, "/api/validateSession", bytes.NewReader(marshalled))
+		router.POST("/api/validateSession", routeHandler.ValidateSession)
 		router.ServeHTTP(w, r)
 
 		json.Unmarshal(w.Body.Bytes(), &validationReponse)
@@ -86,12 +87,78 @@ func TestRouteHandlers(t *testing.T) {
 
 		marshalled, _ := json.Marshal(responseUserClientData)
 
-		r, _ := http.NewRequest(http.MethodPost, "/validateSession", bytes.NewReader(marshalled))
-		router.POST("/validateSession", routeHandler.ValidateSession)
+		r, _ := http.NewRequest(http.MethodPost, "/api/validateSession", bytes.NewReader(marshalled))
+		router.POST("/api/validateSession", routeHandler.ValidateSession)
 		router.ServeHTTP(w, r)
 
 		json.Unmarshal(w.Body.Bytes(), &validationReponse)
 		if validationReponse.Valid {
+			t.Error("Wanted invalid response, got valid")
+		}
+	})
+	t.Run("Login_valid", func(t *testing.T) {
+		var loginResponse schemas.LoginResponse
+		loginPayload := schemas.LoginPayload{
+			Username: "a",
+			Password: "password",
+		}
+		gin.SetMode(gin.TestMode)
+
+		w := httptest.NewRecorder()
+		_, router := gin.CreateTestContext(w)
+
+		marshalled, _ := json.Marshal(loginPayload)
+
+		r, _ := http.NewRequest(http.MethodPost, "/api/login", bytes.NewReader(marshalled))
+		router.POST("/api/login", routeHandler.Login)
+		router.ServeHTTP(w, r)
+
+		json.Unmarshal(w.Body.Bytes(), &loginResponse)
+		if !loginResponse.Valid {
+			t.Error("Wanted valid response, got invalid")
+		}
+	})
+	t.Run("Login_invalid_username", func(t *testing.T) {
+		var loginResponse schemas.LoginResponse
+		loginPayload := schemas.LoginPayload{
+			Username: "b",
+			Password: "password",
+		}
+		gin.SetMode(gin.TestMode)
+
+		w := httptest.NewRecorder()
+		_, router := gin.CreateTestContext(w)
+
+		marshalled, _ := json.Marshal(loginPayload)
+
+		r, _ := http.NewRequest(http.MethodPost, "/api/login", bytes.NewReader(marshalled))
+		router.POST("/api/login", routeHandler.Login)
+		router.ServeHTTP(w, r)
+
+		json.Unmarshal(w.Body.Bytes(), &loginResponse)
+		if loginResponse.Valid {
+			t.Error("Wanted invalid response, got valid")
+		}
+	})
+	t.Run("Login_invalid_password", func(t *testing.T) {
+		var loginResponse schemas.LoginResponse
+		loginPayload := schemas.LoginPayload{
+			Username: "a",
+			Password: "passwor",
+		}
+		gin.SetMode(gin.TestMode)
+
+		w := httptest.NewRecorder()
+		_, router := gin.CreateTestContext(w)
+
+		marshalled, _ := json.Marshal(loginPayload)
+
+		r, _ := http.NewRequest(http.MethodPost, "/api/login", bytes.NewReader(marshalled))
+		router.POST("/api/login", routeHandler.Login)
+		router.ServeHTTP(w, r)
+
+		json.Unmarshal(w.Body.Bytes(), &loginResponse)
+		if loginResponse.Valid {
 			t.Error("Wanted invalid response, got valid")
 		}
 	})
