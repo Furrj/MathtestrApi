@@ -23,6 +23,8 @@ func TestDBHandler(t *testing.T) {
 		Password:  "a",
 		FirstName: "Jackson",
 		LastName:  "Furr",
+		Role:      "A",
+		Period:    0,
 	}
 
 	testSessionData := schemas.SessionData{

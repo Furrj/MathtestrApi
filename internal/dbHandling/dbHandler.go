@@ -39,7 +39,7 @@ func (dbHandler *DBHandler) CheckIfUsernameExists(username string) (bool, error)
 
 func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserData, error) {
 	var user schemas.AllUserData
-	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.Firstname, &user.Lastname, &user.SessionKey, &user.Expires)
+	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.Firstname, &user.Lastname, &user.Role, &user.Period, &user.SessionKey, &user.Expires)
 	if err != nil {
 		return user, err
 	}
@@ -56,7 +56,7 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 }
 
 func (dbHandler *DBHandler) InsertUser(r schemas.RegisterPayload) error {
-	_, err := dbHandler.DB.Exec(context.Background(), EInsertUser, r.Username, r.Password, r.FirstName, r.LastName)
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertUser, r.Username, r.Password, r.FirstName, r.LastName, r.Role, r.Period)
 	if err != nil {
 		return err
 	}

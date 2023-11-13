@@ -37,6 +37,8 @@ func TestRouteHandlers(t *testing.T) {
 			Password:  "password",
 			FirstName: "Jackson",
 			LastName:  "Furr",
+			Role:      "A",
+			Period:    0,
 		}
 
 		marshalled, _ := json.Marshal(registerPayload)

@@ -6,7 +6,7 @@ const QCheckIfUsernameExists = `
 `
 
 const QGetUserByUsername = `
-	Select user_id, username, password, first_name, last_name, uuid, expires
+	Select user_id, username, password, first_name, last_name, role, period, uuid, expires
 	FROM user_info
 	NATURAL JOIN session_data
 	WHERE username=$1
@@ -20,8 +20,8 @@ const QGetUserIDByUsername = `
 
 // INSERT
 const EInsertUser = `
-	INSERT INTO user_info (username, password, first_name, last_name)
-	VALUES ($1, $2, $3, $4)
+	INSERT INTO user_info (username, password, first_name, last_name, role, period)
+	VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 const EInsertSessionData = `
@@ -34,6 +34,8 @@ const EInitUserInfo = `
 	CREATE TABLE user_info (
 		user_id SERIAL PRIMARY KEY,
 		username VARCHAR(16),
+		role VARCHAR(1),
+		period SMALLINT,
 		password VARCHAR(16),
 		first_name VARCHAR(16),
 		last_name VARCHAR(16)
