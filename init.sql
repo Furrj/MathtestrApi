@@ -2,12 +2,16 @@ CREATE DATABASE mathtestr;
 
 \c mathtestr
 
+CREATE TYPE role AS ENUM ('S', 'T', 'A');
+
 CREATE TABLE user_info (
     user_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(16),
+    last_name VARCHAR(16),
     username VARCHAR(16),
     password VARCHAR(16),
-    first_name VARCHAR(16),
-    last_name VARCHAR(16)
+    role role,
+    period SMALLINT
 );
 
 CREATE TABLE session_data(
@@ -31,18 +35,18 @@ CREATE TABLE test_results(
             REFERENCES user_info(user_id)
 );
 
-INSERT INTO user_info (username, password, first_name, last_name)
-VALUES ('a', 'pad89!', 'Jackson', 'Furr');
+INSERT INTO user_info (first_name, last_name, username, password, role, period)
+VALUES ('Jackson', 'Furr', 'Poemmys', 'password', 'A', 0);
+
+INSERT INTO session_data (user_id, uuid, expires)
+VALUES (1, 'test_uuid', 1234);
+
+INSERT INTO test_results(user_id, score, min, max, question_count, operations)
+VALUES (1, 100, 1, 12, 5, 'Multiplication');
 
 SELECT * FROM user_info;
 
-INSERT INTO session_data (user_id, uuid, expires)
-VALUES (0, 'test_uuid', 1234);
-
 SELECT * FROM session_data;
-
-INSERT INTO test_results(user_id, score, min, max, question_count, operations)
-VALUES (3, 100, 1, 12, 5, 'Multiplication');
 
 SELECT * FROM user_info
 INNER JOIN session_data
