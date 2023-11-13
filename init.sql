@@ -6,12 +6,12 @@ CREATE TYPE role AS ENUM ('S', 'T', 'A');
 
 CREATE TABLE user_info (
     user_id SERIAL PRIMARY KEY,
+    role role,
+    period SMALLINT,
     first_name VARCHAR(16),
     last_name VARCHAR(16),
     username VARCHAR(16),
-    password VARCHAR(16),
-    role role,
-    period SMALLINT
+    password VARCHAR(16)
 );
 
 CREATE TABLE session_data(
