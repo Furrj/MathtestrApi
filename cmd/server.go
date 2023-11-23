@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -35,11 +36,12 @@ func main() {
 	// fmt.Printf("%+v\n", user)
 
 	// ROUTING
+
 	routeHandler := routeHandling.InitRouteHandler(dbHandler)
 	router := gin.Default()
 	router.POST("/api/register", routeHandler.Register)
 	router.POST("/api/validateSession", routeHandler.ValidateSession)
 	router.POST("/api/login", routeHandler.Login)
 	router.Use(spa.Middleware("/", "client"))
-	router.Run(":5000")
+	log.Panic(router.Run(":5000"))
 }

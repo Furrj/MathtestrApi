@@ -1,6 +1,8 @@
 .vscode/
+.idea/
 server
 *.exe
 config.env
 logs/
 *.sh
+*.txt
