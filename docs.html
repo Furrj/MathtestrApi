@@ -66,13 +66,15 @@
                     <ul>
                       <li>InitDBHandler(connectionString string) -> *DBHandler</li>
                       <li>CheckIfUsernameExists(username string) -> (bool, error)</li>
-                      <li>GetUserByUsername(username string) -> (AllUserData, error)</li>
+                      <li>GetUserByUsername(username string) -> (schemas.AllUserData, error)</li>
                       <li>GetUserIDByUsername(username string) -> (int, error)</li>
+                      <li>GetSessionDataByUserID(id int) -> (schemas.SessionData, error)</li>
+                      <li>GetTestResultsByUserID(id int) -> (schemas.TestResults, error)</li>
                       <li>InsertUserInfo(r schemas.RegisterPayload) -> error</li>
                       <li>InsertSessionData(s schemas.SessionData) -> error</li>
                       <li>InsertTestResults(t schemas.TestResults) -> error</li>
-                      <li>DropTables() -> error</li>
                       <li>CreateTables() -> error</li>
+                      <li>DropTables() -> error</li>
                     </ul>
                   </li>
                 </ul>

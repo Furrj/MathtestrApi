@@ -41,7 +41,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	// Insert into user_info
 	if err := r.dbHandler.InsertUserInfo(registerPayload); err != nil {
 		fmt.Printf("Error inserting user from /register: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Username already exists")
+		ctx.String(http.StatusNotFound, "Error inserting new user")
 		return
 	}
 
@@ -49,18 +49,24 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	id, err := r.dbHandler.GetUserIDByUsername(registerPayload.Username)
 	if err != nil {
 		fmt.Printf("Error searching for newly inserted user: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error inserting new user")
+		return
 	}
 
 	// Generate and insert Session Data
 	sessionData := userHandlers.GenerateNewUserSessionData(id)
 	if err := r.dbHandler.InsertSessionData(sessionData); err != nil {
 		fmt.Printf("Error inserting session data: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error generating and inserting session data")
+		return
 	}
 
 	//Get all new user data
 	userData, err := r.dbHandler.GetUserByUsername(registerPayload.Username)
 	if err != nil {
 		fmt.Printf("Error retrieving new user information: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
+		return
 	}
 
 	// Generate and send response
