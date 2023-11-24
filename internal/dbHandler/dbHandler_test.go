@@ -2,11 +2,11 @@ package dbHandler
 
 import (
 	"context"
+	"mathtestr.com/server/internal/testHelpers/objects"
 	"os"
 	"testing"
 
 	"github.com/joho/godotenv"
-	"mathtestr.com/server/internal/schemas"
 )
 
 func TestDBHandler(t *testing.T) {
@@ -14,46 +14,14 @@ func TestDBHandler(t *testing.T) {
 		godotenv.Load("../../config.env")
 	}
 
+	// Vars
+	testRegisterPayload := objects.TestRegisterPayload
+	testSessionData := objects.TestSessionData
+	testResultsData := objects.TestResultsData
+	testAllUserData := objects.TestAllUserData
+
 	dbHandler := InitDBHandler(os.Getenv("DB_URL_TEST"))
 	defer dbHandler.DB.Close(context.Background())
-
-	// SETUP
-	testRegisterPayload := schemas.RegisterPayload{
-		Username:  "a",
-		Password:  "a",
-		FirstName: "Jackson",
-		LastName:  "Furr",
-		Period:    0,
-		Teacher:   "Mrs. Furr",
-	}
-
-	testSessionData := schemas.SessionData{
-		ID:         1,
-		SessionKey: "test_uuid",
-		Expires:    1234,
-	}
-
-	testResultsData := schemas.TestResults{
-		ID:            1,
-		Score:         100,
-		Min:           0,
-		Max:           12,
-		QuestionCount: 10,
-		Operations:    "multiplication,addition",
-	}
-
-	testAllUserData := schemas.AllUserData{
-		Username:   "a",
-		Password:   "a",
-		FirstName:  "Jackson",
-		LastName:   "Furr",
-		Period:     0,
-		Teacher:    "Mrs. Furr",
-		Role:       "S",
-		ID:         1,
-		SessionKey: "test_uuid",
-		Expires:    1234,
-	}
 
 	t.Run("Ping connection", func(t *testing.T) {
 		if err := dbHandler.DB.Ping(context.Background()); err != nil {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"mathtestr.com/server/internal/testHelpers/objects"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -32,14 +33,7 @@ func TestRouteHandlers(t *testing.T) {
 			t.Errorf("Error creating tables: %+v\n", err)
 		}
 
-		registerPayload := schemas.RegisterPayload{
-			Username:  "a",
-			Password:  "password",
-			FirstName: "Jackson",
-			LastName:  "Furr",
-			Period:    0,
-			Teacher:   "Mrs. Furr",
-		}
+		registerPayload := objects.TestRegisterPayload
 
 		marshalled, _ := json.Marshal(registerPayload)
 
@@ -100,10 +94,7 @@ func TestRouteHandlers(t *testing.T) {
 	})
 	t.Run("Login_valid", func(t *testing.T) {
 		var loginResponse schemas.LoginResponse
-		loginPayload := schemas.LoginPayload{
-			Username: "a",
-			Password: "password",
-		}
+		loginPayload := objects.TestLoginPayload
 		gin.SetMode(gin.TestMode)
 
 		w := httptest.NewRecorder()

@@ -5,7 +5,7 @@ type UserClientData struct {
 	Username   string `json:"username"`
 	Role       string `json:"role"`
 	Period     uint8  `json:"period"`
-	Teacher    string `json:"teacher"`
+	Teacher    uint   `json:"teacher"`
 	SessionKey string `json:"session_key"`
 }
 
@@ -29,7 +29,7 @@ type AllUserData struct {
 	Username   string `json:"username"`
 	Role       string `json:"role"`
 	Period     uint8  `json:"period"`
-	Teacher    string `json:"teacher"`
+	Teacher    uint   `json:"teacher"`
 	Password   string `json:"password"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`

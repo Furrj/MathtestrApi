@@ -73,7 +73,7 @@ const EInitUserInfo = `
 		password VARCHAR(16),
 		role role,
 		period SMALLINT,
-		teacher VARCHAR(16)
+		teacher INT
 	)
 `
 

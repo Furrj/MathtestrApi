@@ -2,13 +2,10 @@ package routeHandling
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"os/exec"
-
 	"github.com/gin-gonic/gin"
 	"mathtestr.com/server/internal/schemas"
 	"mathtestr.com/server/internal/userHandlers"
+	"net/http"
 )
 
 // Register recieves a RegisterPayload, then checks if the username is valid,
@@ -84,8 +81,8 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, registerResponse)
 
 	// Backup
-	cmd := exec.Command("./backup.sh")
-	if err := cmd.Run(); err != nil {
-		log.Printf("Error backing up Postgres: %+v\n", err)
-	}
+	//cmd := exec.Command("./backup.sh")
+	//if err := cmd.Run(); err != nil {
+	//	log.Printf("cError backing up Postgres: %+v\n", err)
+	//}
 }
