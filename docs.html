@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Mathtestr Server</title>
+  </head>
+  <body>
+    <main>
+
+      <article>
+        <h1>Mathtestr Server Docs</h1>
+        <h3>Author: Jackson Furr</h3>
+      </article>
+
+      <hr>
+
+      <article>
+        <h3>Contents</h3>
+        <ol>
+          <li><a href="#env_vars">Environemnt Vars</a></li>
+          <li><a href="#server">cmd/server</a></li>
+          <li><a href="#internal">internal</a></li>
+        </ol>
+      </article>
+
+      <hr>
+
+      <article>
+        <h3 id="env_vars">Environment Vars</h3>
+        <ol>
+          <li>MODE: DEV/PROD</li>
+          <li>DB_URL: Postgres Prod</li>
+          <li>DB_URL_TEST: Postgres Dev</li>
+        </ol>
+      </article>
+
+      <hr>
+
+      <article>
+        <h3 id="server">cmd/server</h3>
+        <ol>
+          <li>Init dbHandler</li>
+          <li>Init routeHandler</li>
+          <li>Listen for routes</li>
+        </ol>
+      </article>
+
+      <hr>
+
+      <article>
+        <h3 id="internal">internal</h3>
+        <ul>
+          <li>dbHandler
+            <ul>
+              <li>df</li>
+            </ul>
+          </li>
+          <li>routeHandler
+            <ol>df</ol>
+          </li>
+        </ul>
+      </article>
+
+    </main>
+  </body>
+</html>
+
+<style>
+  html {
+    width: 100vw;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  main, article {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  hr {
+    width: 100vw;
+  }
+</style>
