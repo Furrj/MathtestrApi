@@ -11,7 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/dbHandler"
 	"mathtestr.com/server/internal/schemas"
 )
 
@@ -20,15 +20,15 @@ func TestRouteHandlers(t *testing.T) {
 		godotenv.Load("../../config.env")
 	}
 
-	dbHandler := dbHandling.InitDBHandler(os.Getenv("DB_URL_TEST"))
-	routeHandler := InitRouteHandler(dbHandler)
+	db := dbHandler.InitDBHandler(os.Getenv("DB_URL_TEST"))
+	routeHandler := InitRouteHandler(db)
 	defer routeHandler.dbHandler.DB.Close(context.Background())
 
 	var responseData schemas.RegisterResponse
 	var responseUserClientData schemas.UserClientData
 
 	t.Run("Register", func(t *testing.T) {
-		if err := dbHandler.CreateTables(); err != nil {
+		if err := db.CreateTables(); err != nil {
 			t.Errorf("Error creating tables: %+v\n", err)
 		}
 
@@ -37,7 +37,6 @@ func TestRouteHandlers(t *testing.T) {
 			Password:  "password",
 			FirstName: "Jackson",
 			LastName:  "Furr",
-			Role:      "A",
 			Period:    0,
 		}
 
@@ -165,13 +164,13 @@ func TestRouteHandlers(t *testing.T) {
 		}
 	})
 
-	if err := dbHandler.DropTables(); err != nil {
+	if err := db.DropTables(); err != nil {
 		t.Errorf("Error dropping tables: %+v\n", err)
 	}
 }
 
 func checkIfUserInserted(t *testing.T, r *RouteHandler, p schemas.RegisterPayload) bool {
 	t.Helper()
-	bool, _ := r.dbHandler.CheckIfUsernameExists(p.Username)
-	return bool
+	result, _ := r.dbHandler.CheckIfUsernameExists(p.Username)
+	return result
 }

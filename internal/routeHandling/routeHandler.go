@@ -1,14 +1,14 @@
 package routeHandling
 
 import (
-	"mathtestr.com/server/internal/dbHandling"
+	"mathtestr.com/server/internal/dbHandler"
 )
 
 type RouteHandler struct {
-	dbHandler *dbHandling.DBHandler
+	dbHandler *dbHandler.DBHandler
 }
 
-func InitRouteHandler(dbHandler *dbHandling.DBHandler) *RouteHandler {
+func InitRouteHandler(dbHandler *dbHandler.DBHandler) *RouteHandler {
 	newRouteHandler := RouteHandler{
 		dbHandler: dbHandler,
 	}

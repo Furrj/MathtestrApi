@@ -1,4 +1,4 @@
-package dbHandling
+package dbHandler
 
 import (
 	"context"
@@ -23,8 +23,8 @@ func TestDBHandler(t *testing.T) {
 		Password:  "a",
 		FirstName: "Jackson",
 		LastName:  "Furr",
-		Role:      "A",
 		Period:    0,
+		Teacher:   "Mrs. Furr",
 	}
 
 	testSessionData := schemas.SessionData{
@@ -43,8 +43,8 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("Error initializing tables: %+v\n", err)
 		}
 	})
-	t.Run("InsertUser", func(t *testing.T) {
-		if err := dbHandler.InsertUser(testUser); err != nil {
+	t.Run("InsertUserInfo", func(t *testing.T) {
+		if err := dbHandler.InsertUserInfo(testUser); err != nil {
 			t.Errorf("Error inserting user: %+v\n", err)
 		}
 

@@ -11,11 +11,10 @@ import (
 	"mathtestr.com/server/internal/userHandlers"
 )
 
-/*
-POST("/register")
-Recieves: RegisterPayload
-Sends: RegisterResponse or ErrorCode
-*/
+// Register
+// Receives: RegisterPayload
+// Sends: registerResponse
+// Sends: registerResponse
 func (r *RouteHandler) Register(ctx *gin.Context) {
 	var registerPayload schemas.RegisterPayload
 	var registerResponse schemas.RegisterResponse
@@ -42,7 +41,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	}
 
 	// Insert into user_info
-	if err := r.dbHandler.InsertUser(registerPayload); err != nil {
+	if err := r.dbHandler.InsertUserInfo(registerPayload); err != nil {
 		fmt.Printf("Error inserting user from /register: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Username already exists")
 		return
@@ -60,12 +59,19 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		fmt.Printf("Error inserting session data: %+v\n", err)
 	}
 
+	//Get all new user data
+	userData, err := r.dbHandler.GetUserByUsername(registerPayload.Username)
+	if err != nil {
+		fmt.Printf("Error retrieving new user information: %+v\n", err)
+	}
+
 	// Generate and send response
 	userClientData := schemas.UserClientData{
 		ID:         sessionData.ID,
 		Username:   registerPayload.Username,
-		Role:       registerPayload.Role,
+		Role:       userData.Role,
 		Period:     registerPayload.Period,
+		Teacher:    userData.Teacher,
 		SessionKey: sessionData.SessionKey,
 	}
 	registerResponse.Valid = true
