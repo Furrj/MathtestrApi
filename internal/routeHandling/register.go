@@ -11,10 +11,8 @@ import (
 	"mathtestr.com/server/internal/userHandlers"
 )
 
-// Register
-// Receives: RegisterPayload
-// Sends: registerResponse
-// Sends: registerResponse
+// Register recieves a RegisterPayload, then checks if the username is valid,
+// inserts into user_info, generates SessionData, then sends a RegisterResponse
 func (r *RouteHandler) Register(ctx *gin.Context) {
 	var registerPayload schemas.RegisterPayload
 	var registerResponse schemas.RegisterResponse
@@ -67,12 +65,12 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 
 	// Generate and send response
 	userClientData := schemas.UserClientData{
-		ID:         sessionData.ID,
+		ID:         userData.ID,
 		Username:   registerPayload.Username,
 		Role:       userData.Role,
 		Period:     registerPayload.Period,
 		Teacher:    userData.Teacher,
-		SessionKey: sessionData.SessionKey,
+		SessionKey: userData.SessionKey,
 	}
 	registerResponse.Valid = true
 	registerResponse.User = userClientData

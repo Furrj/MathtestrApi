@@ -1,4 +1,4 @@
-// dbHandler package handles communication with the Postgres database
+// Package dbHandler handles communication with the Postgres database
 package dbHandler
 
 import (
@@ -66,6 +66,21 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 	return id, nil
 }
 
+// GetTestResultsByUserID takes in username string and searches test_results
+// for all rows under username
+// FIXME: Iterate through multiple rows
+func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults, error) {
+	var results schemas.TestResults
+
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetTestResultsByUserID, id).Scan(&results.ID, &results.Score, &results.Min, &results.Max, &results.QuestionCount, &results.Operations); err != nil {
+		return results, err
+	} else if id != int(results.ID) {
+		return results, errors.New("id mismatch when searching for test result by id")
+	}
+
+	return results, nil
+}
+
 // InsertUserInfo takes RegisterPayload and inserts user data into user_info
 // table, returns error
 // FIXME: Handle Role, as of now hardcoded
@@ -85,6 +100,17 @@ func (dbHandler *DBHandler) InsertSessionData(s schemas.SessionData) error {
 	_, err := dbHandler.DB.Exec(context.Background(), EInsertSessionData, s.ID, s.SessionKey, s.Expires)
 	if err != nil {
 		log.Printf("Error inserting session data: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+// InsertTestResults takes SessionData object and inserts it into database
+// session_data table, returns error
+func (dbHandler *DBHandler) InsertTestResults(t schemas.TestResults) error {
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertTestResults, t.ID, t.Score, t.Min, t.Max, t.QuestionCount, t.Operations)
+	if err != nil {
+		log.Printf("Error inserting test results: %+v\n", err)
 		return err
 	}
 	return nil

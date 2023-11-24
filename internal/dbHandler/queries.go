@@ -22,6 +22,13 @@ const QGetUserIDByUsername = `
 	WHERE username=$1
 `
 
+// QGetTestResultsByUsername takes in username and returns all test results
+const QGetTestResultsByUserID = `
+	SELECT user_id, score, min, max, question_count, operations
+	FROM test_results
+	WHERE user_id=$1
+`
+
 // INSERT
 
 // EInsertUserInfo inserts all fields of AllUserData into user_info table
@@ -34,6 +41,12 @@ const EInsertUserInfo = `
 const EInsertSessionData = `
 	INSERT INTO session_data (user_id, session_key, expires)
 	VALUES ($1, $2, $3)
+`
+
+// EInsertTestResults inserts all fields of TestResults into test_results table
+const EInsertTestResults = `
+    INSERT INTO test_results (user_id, score, min, max, question_count, operations)
+    VALUES ($1, $2, $3, $4, $5, $6)
 `
 
 // TESTING

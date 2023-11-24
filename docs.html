@@ -57,25 +57,43 @@
             <ul>
               <li>struct DBHandler
                 <ul>
-                  <li>DB: *pgx.Conn</li>
-                </ul>
-              </li>
-              <li>Methods:
-                <ul>
-                  <li>InitDBHandler(connectionString string) -> *DBHandler</li>
-                  <li>CheckIfUsernameExists(username string) -> (bool, error)</li>
-                  <li>GetUserByUsername(username string) -> (AllUserData, error)</li>
-                  <li>GetUserIDByUsername(username string) -> (int, error)</li>
-                  <li>InsertUserInfo(r schemas.RegisterPayload) -> error</li>
-                  <li>InsertSessionData(s schemas.SessionData) -> error</li>
-                  <li>DropTables() -> error</li>
-                  <li>CreateTables() -> error</li>
+                  <li>Props:
+                    <ul>
+                      <li>DB *pgx.Conn</li>
+                    </ul>
+                  </li>
+                  <li>Methods:
+                    <ul>
+                      <li>InitDBHandler(connectionString string) -> *DBHandler</li>
+                      <li>CheckIfUsernameExists(username string) -> (bool, error)</li>
+                      <li>GetUserByUsername(username string) -> (AllUserData, error)</li>
+                      <li>GetUserIDByUsername(username string) -> (int, error)</li>
+                      <li>InsertUserInfo(r schemas.RegisterPayload) -> error</li>
+                      <li>InsertSessionData(s schemas.SessionData) -> error</li>
+                      <li>InsertTestResults(t schemas.TestResults) -> error</li>
+                      <li>DropTables() -> error</li>
+                      <li>CreateTables() -> error</li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
             </ul>
           </li>
           <li>routeHandler
-            <ol>df</ol>
+            <ul>
+              <li>struct RouteHandler
+                <ul>
+                  <li>Props:
+                    <ul><li>dbHandler *dbHandler.DBHandler</li></ul>
+                  </li>
+                  <li>Methods:
+                    <ul>
+                      <li>InitRouteHandler(dbHandler *dbHandler.DBHandler) -> *RouteHandler</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </li>
         </ul>
       </article>
