@@ -121,6 +121,15 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("got %s, want %s for session_key", got.SessionKey, wantSessionID)
 		}
 	})
+	t.Run("GetSessionData", func(t *testing.T) {
+		got, err := dbHandler.GetSessionDataByUserID(1)
+		if err != nil {
+			t.Errorf("Error searching for test result by ID: %+v\n", err)
+		}
+		if got != testSessionData {
+			t.Errorf("got %+v\n, want %+v\n for SessionData", got, testSessionData)
+		}
+	})
 	t.Run("GetTestResults", func(t *testing.T) {
 		got, err := dbHandler.GetTestResultsByUserID(1)
 		if err != nil {

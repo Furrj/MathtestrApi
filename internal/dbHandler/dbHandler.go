@@ -66,8 +66,22 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 	return id, nil
 }
 
+// GetSessionDataByUserID takes in username string and searches returns
+// session data and error
+func (dbHandler *DBHandler) GetSessionDataByUserID(id int) (schemas.SessionData, error) {
+	var sessionData schemas.SessionData
+
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetSessionDataByUserID, id).Scan(&sessionData.ID, &sessionData.SessionKey, &sessionData.Expires); err != nil {
+		return sessionData, err
+	} else if id != int(sessionData.ID) {
+		return sessionData, errors.New("id mismatch when searching for session data by id")
+	}
+
+	return sessionData, nil
+}
+
 // GetTestResultsByUserID takes in username string and searches test_results
-// for all rows under username
+// for all rows under username and error
 // FIXME: Iterate through multiple rows
 func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults, error) {
 	var results schemas.TestResults

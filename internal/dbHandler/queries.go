@@ -22,7 +22,14 @@ const QGetUserIDByUsername = `
 	WHERE username=$1
 `
 
-// QGetTestResultsByUsername takes in username and returns all test results
+// QGetSessionDataByUserID takes in user_id and returns session data
+const QGetSessionDataByUserID = `
+	SELECT user_id, session_key, expires
+	FROM session_data
+	WHERE user_id=$1
+`
+
+// QGetTestResultsByUsername takes in user_id and returns all test results
 const QGetTestResultsByUserID = `
 	SELECT user_id, score, min, max, question_count, operations
 	FROM test_results
