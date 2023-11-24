@@ -72,7 +72,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		Username:   registerPayload.Username,
 		Role:       userData.Role,
 		Period:     registerPayload.Period,
-		Teacher:    userData.Teacher,
+		TeacherID:  userData.TeacherID,
 		SessionKey: userData.SessionKey,
 	}
 	registerResponse.Valid = true

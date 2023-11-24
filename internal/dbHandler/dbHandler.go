@@ -48,7 +48,7 @@ func (dbHandler *DBHandler) CheckIfUsernameExists(username string) (bool, error)
 // for it. Binds query to AllUserData schema, then returns it and error
 func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserData, error) {
 	var user schemas.AllUserData
-	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.Teacher, &user.SessionKey, &user.Expires)
+	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.TeacherID, &user.SessionKey, &user.Expires)
 	if err != nil {
 		return user, err
 	}
@@ -101,7 +101,7 @@ func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults,
 func (dbHandler *DBHandler) InsertUserInfo(r schemas.RegisterPayload) error {
 	// Hardcoded user Role
 	const DefaultRole = "S"
-	_, err := dbHandler.DB.Exec(context.Background(), EInsertUserInfo, r.Username, r.Password, r.FirstName, r.LastName, DefaultRole, r.Period, r.Teacher)
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertUserInfo, r.Username, r.Password, r.FirstName, r.LastName, DefaultRole, r.Period, r.TeacherID)
 	if err != nil {
 		return err
 	}

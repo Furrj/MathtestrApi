@@ -12,7 +12,7 @@ CREATE TABLE user_info (
     password VARCHAR(16),
     role role,
     period SMALLINT,
-    teacher INT
+    teacher_id INT
 );
 
 CREATE TABLE session_data(
@@ -36,7 +36,7 @@ CREATE TABLE test_results(
             REFERENCES user_info(user_id)
 );
 
-INSERT INTO user_info (first_name, last_name, username, password, role, period, teacher)
+INSERT INTO user_info (first_name, last_name, username, password, role, period, teacher_id)
 VALUES ('Jackson', 'Furr', 'Poemmys', 'password', 'S', 0, 2);
 
 INSERT INTO session_data (user_id, session_key, expires)

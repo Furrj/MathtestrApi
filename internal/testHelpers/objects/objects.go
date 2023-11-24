@@ -10,7 +10,7 @@ var TestRegisterPayload = schemas.RegisterPayload{
 	FirstName: "Jackson",
 	LastName:  "Furr",
 	Period:    0,
-	Teacher:   2,
+	TeacherID: 2,
 }
 
 var TestSessionData = schemas.SessionData{
@@ -34,7 +34,7 @@ var TestAllUserData = schemas.AllUserData{
 	FirstName:  "Jackson",
 	LastName:   "Furr",
 	Period:     0,
-	Teacher:    2,
+	TeacherID:  2,
 	Role:       "S",
 	ID:         1,
 	SessionKey: "test_uuid",

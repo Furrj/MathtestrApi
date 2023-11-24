@@ -9,7 +9,7 @@ const QCheckIfUsernameExists = `
 
 // QGetUserByUsername takes in username and returns all fields of AllUserData
 const QGetUserByUsername = `
-	Select user_id, username, password, first_name, last_name, role, period, teacher, session_key, expires
+	Select user_id, username, password, first_name, last_name, role, period, teacher_id, session_key, expires
 	FROM user_info
 	NATURAL JOIN session_data
 	WHERE username=$1
@@ -40,7 +40,7 @@ const QGetTestResultsByUserID = `
 
 // EInsertUserInfo inserts all fields of AllUserData into user_info table
 const EInsertUserInfo = `
-	INSERT INTO user_info (username, password, first_name, last_name, role, period, teacher)
+	INSERT INTO user_info (username, password, first_name, last_name, role, period, teacher_id)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
@@ -73,7 +73,7 @@ const EInitUserInfo = `
 		password VARCHAR(16),
 		role role,
 		period SMALLINT,
-		teacher INT
+		teacher_id INT
 	)
 `
 
