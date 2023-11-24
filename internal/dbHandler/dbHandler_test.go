@@ -18,7 +18,7 @@ func TestDBHandler(t *testing.T) {
 	defer dbHandler.DB.Close(context.Background())
 
 	// SETUP
-	testUser := schemas.RegisterPayload{
+	testRegisterPayload := schemas.RegisterPayload{
 		Username:  "a",
 		Password:  "a",
 		FirstName: "Jackson",
@@ -42,6 +42,19 @@ func TestDBHandler(t *testing.T) {
 		Operations:    "multiplication,addition",
 	}
 
+	testAllUserData := schemas.AllUserData{
+		Username:   "a",
+		Password:   "a",
+		FirstName:  "Jackson",
+		LastName:   "Furr",
+		Period:     0,
+		Teacher:    "Mrs. Furr",
+		Role:       "S",
+		ID:         1,
+		SessionKey: "test_uuid",
+		Expires:    1234,
+	}
+
 	t.Run("Ping connection", func(t *testing.T) {
 		if err := dbHandler.DB.Ping(context.Background()); err != nil {
 			t.Errorf("Error initializing database: %+v\n", err)
@@ -53,11 +66,11 @@ func TestDBHandler(t *testing.T) {
 		}
 	})
 	t.Run("InsertUserInfo", func(t *testing.T) {
-		if err := dbHandler.InsertUserInfo(testUser); err != nil {
+		if err := dbHandler.InsertUserInfo(testRegisterPayload); err != nil {
 			t.Errorf("Error inserting user: %+v\n", err)
 		}
 
-		exists, err := dbHandler.CheckIfUsernameExists(testUser.Username)
+		exists, err := dbHandler.CheckIfUsernameExists(testRegisterPayload.Username)
 		if err != nil {
 			t.Errorf("Error checking to see if user was inserted: %+v\n", err)
 		}
@@ -97,13 +110,12 @@ func TestDBHandler(t *testing.T) {
 	})
 	t.Run("GetUserByUsername", func(t *testing.T) {
 		got, err := dbHandler.GetUserByUsername("a")
-		const wantUsername = "a"
 		const wantSessionID = "test_uuid"
 		if err != nil {
 			t.Errorf("Error when querying for user: %+v\n", err)
 		}
-		if got.Username != wantUsername {
-			t.Errorf("got %s, want %s for username", got.Username, wantUsername)
+		if got != testAllUserData {
+			t.Errorf("got %+v\n, want %+v\n for AllUserData", got, testAllUserData)
 		}
 		if got.SessionKey != wantSessionID {
 			t.Errorf("got %s, want %s for session_key", got.SessionKey, wantSessionID)
@@ -111,12 +123,11 @@ func TestDBHandler(t *testing.T) {
 	})
 	t.Run("GetTestResults", func(t *testing.T) {
 		got, err := dbHandler.GetTestResultsByUserID(1)
-		want := 12
 		if err != nil {
 			t.Errorf("Error searching for test result by ID: %+v\n", err)
 		}
-		if int(got.Max) != want {
-			t.Errorf("got %d, want %d for max", got.Max, want)
+		if got != testResultsData {
+			t.Errorf("got %+v\n, want %+v\n for TestResults", got, testResultsData)
 		}
 	})
 	t.Run("GetUserIDByUsername", func(t *testing.T) {

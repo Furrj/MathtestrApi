@@ -48,7 +48,7 @@ func (dbHandler *DBHandler) CheckIfUsernameExists(username string) (bool, error)
 // for it. Binds query to AllUserData schema, then returns it and error
 func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserData, error) {
 	var user schemas.AllUserData
-	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.Firstname, &user.Lastname, &user.Role, &user.Period, &user.Teacher, &user.SessionKey, &user.Expires)
+	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.Teacher, &user.SessionKey, &user.Expires)
 	if err != nil {
 		return user, err
 	}
