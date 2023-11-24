@@ -5,8 +5,8 @@ type RegisterPayload struct {
 	Password  string `json:"password"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-	Period    uint8  `json:"period"`
-	TeacherID uint   `json:"teacher_id"`
+	Period    uint8  `json:"period,string"`
+	TeacherID uint32 `json:"teacher_id,string"`
 }
 
 type RegisterResponse struct {
