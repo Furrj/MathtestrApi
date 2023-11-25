@@ -16,6 +16,7 @@ import (
 	"mathtestr.com/server/internal/schemas"
 )
 
+//goland:noinspection GoUnhandledErrorResult
 func TestRouteHandlers(t *testing.T) {
 	if os.Getenv("MODE") != "PROD" {
 		godotenv.Load("../../config.env")
