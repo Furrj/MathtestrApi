@@ -4,22 +4,22 @@ package objects
 
 import "mathtestr.com/server/internal/schemas"
 
-var TestRegisterPayload = schemas.RegisterPayload{
+var TestRegisterPayloadStudent = schemas.RegisterPayload{
 	Username:  "a",
 	Password:  "a",
 	FirstName: "Jackson",
 	LastName:  "Furr",
-	Period:    0,
+	Period:    2,
 	TeacherID: 2,
 }
 
-var TestSessionData = schemas.SessionData{
+var TestSessionDataStudent = schemas.SessionData{
 	ID:         1,
 	SessionKey: "test_uuid",
 	Expires:    1234,
 }
 
-var TestResultsData = schemas.TestResults{
+var TestResultsDataStudent = schemas.TestResults{
 	ID:            1,
 	Score:         100,
 	Min:           0,
@@ -28,12 +28,12 @@ var TestResultsData = schemas.TestResults{
 	Operations:    "multiplication,addition",
 }
 
-var TestAllUserData = schemas.AllUserData{
+var TestAllUserDataStudent = schemas.AllUserData{
 	Username:   "a",
 	Password:   "a",
 	FirstName:  "Jackson",
 	LastName:   "Furr",
-	Period:     0,
+	Period:     2,
 	TeacherID:  2,
 	Role:       "S",
 	ID:         1,
@@ -41,7 +41,21 @@ var TestAllUserData = schemas.AllUserData{
 	Expires:    1234,
 }
 
-var TestLoginPayload = schemas.LoginPayload{
+var TestLoginPayloadStudent = schemas.LoginPayload{
 	Username: "a",
 	Password: "a",
+}
+
+var TestRegisterPayloadTeacher = schemas.RegisterPayload{
+	Username:  "MFurr",
+	Password:  "password",
+	FirstName: "Michelle",
+	LastName:  "Furr",
+	Period:    0,
+	TeacherID: 2,
+}
+
+var TestTeacherInfo = schemas.TeacherData{
+	ID:      2,
+	Periods: 8,
 }

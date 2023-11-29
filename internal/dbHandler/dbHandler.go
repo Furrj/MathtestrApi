@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/jackc/pgx/v5"
 	"mathtestr.com/server/internal/schemas"
@@ -98,11 +99,24 @@ func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults,
 // InsertUserInfo takes RegisterPayload and inserts user data into user_info
 // table, returns error
 // FIXME: Handle Role, as of now hardcoded
-func (dbHandler *DBHandler) InsertUserInfo(r schemas.RegisterPayload) error {
-	// Hardcoded user Role
-	const DefaultRole = "S"
-	_, err := dbHandler.DB.Exec(context.Background(), EInsertUserInfo, r.Username, r.Password, r.FirstName, r.LastName, DefaultRole, r.Period, r.TeacherID)
+func (dbHandler *DBHandler) InsertUserInfo(role string, r schemas.RegisterPayload) error {
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertUserInfo, r.Username, r.Password, r.FirstName, r.LastName, role)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (dbHandler *DBHandler) InsertStudentInfo(userId uint32, s schemas.RegisterPayload) error {
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertStudentInfo, strconv.Itoa(int(userId)), s.TeacherID, s.Period)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (dbHandler *DBHandler) InsertTeacherInfo(t schemas.TeacherData) error {
+	if _, err := dbHandler.DB.Exec(context.Background(), EInsertTeacherInfo, t.ID, t.Periods); err != nil {
 		return err
 	}
 	return nil
@@ -141,6 +155,12 @@ func (dbHandler *DBHandler) CreateTables() error {
 	if _, err := dbHandler.DB.Exec(context.Background(), EInitSessionData); err != nil {
 		fmt.Printf("Error initializing session_data: %+v\n", err)
 	}
+	if _, err := dbHandler.DB.Exec(context.Background(), EInitTeacherInfo); err != nil {
+		fmt.Printf("Error initializing teacher_info: %+v\n", err)
+	}
+	if _, err := dbHandler.DB.Exec(context.Background(), EInitStudentInfo); err != nil {
+		fmt.Printf("Error initializing student_info: %+v\n", err)
+	}
 	if _, err := dbHandler.DB.Exec(context.Background(), EInitTestResults); err != nil {
 		fmt.Printf("Error initializing session_data: %+v\n", err)
 	}
@@ -149,6 +169,14 @@ func (dbHandler *DBHandler) CreateTables() error {
 
 // DropTables is used for testing, drops all tables from database, returns error
 func (dbHandler *DBHandler) DropTables() error {
+	if _, err := dbHandler.DB.Exec(context.Background(), EDeleteAllStudentInfo); err != nil {
+		fmt.Printf("Error dropping student_info table: %+v\n", err)
+		return err
+	}
+	if _, err := dbHandler.DB.Exec(context.Background(), EDeleteAllTeacherInfo); err != nil {
+		fmt.Printf("Error dropping teacher_info table: %+v\n", err)
+		return err
+	}
 	if _, err := dbHandler.DB.Exec(context.Background(), EDeleteAllSessionData); err != nil {
 		fmt.Printf("Error dropping session_data table: %+v\n", err)
 		return err

@@ -34,7 +34,7 @@ func TestRouteHandlers(t *testing.T) {
 			t.Errorf("Error creating tables: %+v\n", err)
 		}
 
-		registerPayload := objects.TestRegisterPayload
+		registerPayload := objects.TestRegisterPayloadStudent
 
 		marshalled, _ := json.Marshal(registerPayload)
 
@@ -95,7 +95,7 @@ func TestRouteHandlers(t *testing.T) {
 	})
 	t.Run("Login_valid", func(t *testing.T) {
 		var loginResponse schemas.LoginResponse
-		loginPayload := objects.TestLoginPayload
+		loginPayload := objects.TestLoginPayloadStudent
 		gin.SetMode(gin.TestMode)
 
 		w := httptest.NewRecorder()

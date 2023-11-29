@@ -12,6 +12,7 @@ const QGetUserByUsername = `
 	Select user_id, username, password, first_name, last_name, role, period, teacher_id, session_key, expires
 	FROM user_info
 	NATURAL JOIN session_data
+	NATURAL JOIN student_info
 	WHERE username=$1
 `
 
@@ -40,8 +41,18 @@ const QGetTestResultsByUserID = `
 
 // EInsertUserInfo inserts all fields of AllUserData into user_info table
 const EInsertUserInfo = `
-	INSERT INTO user_info (username, password, first_name, last_name, role, period, teacher_id)
-	VALUES ($1, $2, $3, $4, $5, $6, $7)
+	INSERT INTO user_info (username, password, first_name, last_name, role)
+	VALUES ($1, $2, $3, $4, $5)
+`
+
+const EInsertStudentInfo = `
+	INSERT INTO student_info (user_id, teacher_id, period)
+	VALUES ($1, $2, $3)
+`
+
+const EInsertTeacherInfo = `
+	INSERT INTO teacher_info (user_id, periods)
+	VALUES ($1, $2)
 `
 
 // EInsertSessionData inserts all fields of SessionData into session_data table
@@ -71,16 +82,38 @@ const EInitUserInfo = `
 		last_name VARCHAR(16),
 		username VARCHAR(16),
 		password VARCHAR(16),
-		role role,
-		period SMALLINT,
-		teacher_id INT
+		role role
+	)
+`
+
+const EInitTeacherInfo = `
+	CREATE TABLE teacher_info(
+    user_id INTEGER PRIMARY KEY,
+    periods SMALLINT,
+    CONSTRAINT fk_user_id
+        FOREIGN KEY (user_id)
+            REFERENCES user_info(user_id)
+	)
+`
+
+const EInitStudentInfo = `
+	CREATE TABLE student_info(
+    user_id INTEGER PRIMARY KEY,
+    teacher_id INTEGER,
+    period SMALLINT,
+    CONSTRAINT fk_user_id
+        FOREIGN KEY (user_id)
+            REFERENCES user_info(user_id),
+	CONSTRAINT fk_teacher_id
+		FOREIGN KEY (teacher_id)
+	    	REFERENCES teacher_info(user_id)
 	)
 `
 
 // EInitSessionData contains SQL commands to create session_data table
 const EInitSessionData = `
 	CREATE TABLE session_data(
-		user_id INTEGER,
+		user_id INTEGER PRIMARY KEY,
 		session_key VARCHAR(36),
 		expires BIGINT,
 		CONSTRAINT fk_user_id
@@ -92,7 +125,7 @@ const EInitSessionData = `
 // EInitTestResults contains SQL commands to create test_results table
 const EInitTestResults = `
 	CREATE TABLE test_results(
-		user_id INTEGER,
+		user_id INTEGER PRIMARY KEY,
 		score SMALLINT,
 		min INTEGER,
 		max INTEGER,
@@ -104,6 +137,14 @@ const EInitTestResults = `
 	)
 `
 
+const EDeleteAllTeacherInfo = `
+	DROP TABLE teacher_info
+`
+
+const EDeleteAllStudentInfo = `
+	DROP TABLE student_info
+`
+
 // EDeleteAllSessionData drops session_data table
 const EDeleteAllSessionData = `
 	DROP TABLE session_data
@@ -111,16 +152,16 @@ const EDeleteAllSessionData = `
 
 // EDeleteAllTestResults drops test_results table
 const EDeleteAllTestResults = `
-	DROP TABLE test_results;
+	DROP TABLE test_results
 `
 
 // EDeleteAllUserInfo drops user_info table, dependents: session_data and
 // rest_results because of user_id
 const EDeleteAllUserInfo = `
-	DROP TABLE user_info;
+	DROP TABLE user_info
 `
 
 // EDeleteRole deletes role type
 const EDeleteRole = `
-	DROP TYPE role;
+	DROP TYPE role
 `

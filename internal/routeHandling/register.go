@@ -66,6 +66,16 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		return
 	}
 
+	// Insert role-related data
+	switch userData.Role {
+	case "S":
+		if err := r.dbHandler.InsertStudentInfo(userData.ID, registerPayload); err != nil {
+			fmt.Printf("Error inserting student info: %+v\n", err)
+			ctx.String(http.StatusNotFound, "Error inserting student info")
+		}
+		return
+	}
+
 	// Generate and send response
 	userClientData := schemas.UserClientData{
 		ID:         userData.ID,

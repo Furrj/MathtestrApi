@@ -27,3 +27,14 @@ type AllUserData struct {
 	SessionKey string `json:"session_key"`
 	Expires    uint64 `json:"expires"`
 }
+
+type TeacherData struct {
+	ID      uint32 `json:"user_id"`
+	Periods uint8  `json:"periods"`
+}
+
+type StudentData struct {
+	ID        uint32 `json:"user_id"`
+	TeacherId uint32 `json:"teacher_id"`
+	Period    uint8  `json:"period"`
+}
