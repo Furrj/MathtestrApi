@@ -33,6 +33,9 @@ func TestRouteHandlers(t *testing.T) {
 		if err := db.CreateTables(); err != nil {
 			t.Errorf("Error creating tables: %+v\n", err)
 		}
+		if err := db.TestInsertTeacher(); err != nil {
+			t.Errorf("Error inserting test teacher")
+		}
 
 		registerPayload := objects.TestRegisterPayloadStudent
 

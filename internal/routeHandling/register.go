@@ -36,7 +36,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	}
 
 	// Insert into user_info
-	if err := r.dbHandler.InsertUserInfo(registerPayload); err != nil {
+	if err := r.dbHandler.InsertUserInfo("S", registerPayload); err != nil {
 		fmt.Printf("Error inserting user from /register: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error inserting new user")
 		return
@@ -47,6 +47,14 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error searching for newly inserted user: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error inserting new user")
+		return
+	}
+
+	// Insert role-related data
+	// FIXME: Switch-case for possible roles
+	if err := r.dbHandler.InsertStudentInfo(uint32(id), registerPayload); err != nil {
+		fmt.Printf("Error inserting student info: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error inserting student info")
 		return
 	}
 
@@ -66,22 +74,12 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	// Insert role-related data
-	switch userData.Role {
-	case "S":
-		if err := r.dbHandler.InsertStudentInfo(userData.ID, registerPayload); err != nil {
-			fmt.Printf("Error inserting student info: %+v\n", err)
-			ctx.String(http.StatusNotFound, "Error inserting student info")
-		}
-		return
-	}
-
 	// Generate and send response
 	userClientData := schemas.UserClientData{
 		ID:         userData.ID,
-		Username:   registerPayload.Username,
+		Username:   userData.Username,
 		Role:       userData.Role,
-		Period:     registerPayload.Period,
+		Period:     userData.Period,
 		TeacherID:  userData.TeacherID,
 		SessionKey: userData.SessionKey,
 	}

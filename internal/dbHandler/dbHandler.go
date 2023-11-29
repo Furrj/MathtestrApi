@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"mathtestr.com/server/internal/testHelpers/objects"
 	"os"
 	"strconv"
 
@@ -96,9 +97,8 @@ func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults,
 	return results, nil
 }
 
-// InsertUserInfo takes RegisterPayload and inserts user data into user_info
+// InsertUserInfo takes Role and RegisterPayload and inserts user data into user_info
 // table, returns error
-// FIXME: Handle Role, as of now hardcoded
 func (dbHandler *DBHandler) InsertUserInfo(role string, r schemas.RegisterPayload) error {
 	_, err := dbHandler.DB.Exec(context.Background(), EInsertUserInfo, r.Username, r.Password, r.FirstName, r.LastName, role)
 	if err != nil {
@@ -139,6 +139,20 @@ func (dbHandler *DBHandler) InsertTestResults(t schemas.TestResults) error {
 	_, err := dbHandler.DB.Exec(context.Background(), EInsertTestResults, t.ID, t.Score, t.Min, t.Max, t.QuestionCount, t.Operations)
 	if err != nil {
 		log.Printf("Error inserting test results: %+v\n", err)
+		return err
+	}
+	return nil
+}
+
+// TESTING
+
+func (dbHandler *DBHandler) TestInsertTeacher() error {
+	if err := dbHandler.InsertUserInfo("T", objects.TestRegisterPayloadTeacher); err != nil {
+		fmt.Printf("Error insert test teacher user_info: %+v\n", err)
+		return err
+	}
+	if err := dbHandler.InsertTeacherInfo(objects.TestTeacherInfo); err != nil {
+		fmt.Printf("Error inserting test teacher_info: %+v\n", err)
 		return err
 	}
 	return nil

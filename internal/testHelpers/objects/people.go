@@ -10,17 +10,17 @@ var TestRegisterPayloadStudent = schemas.RegisterPayload{
 	FirstName: "Jackson",
 	LastName:  "Furr",
 	Period:    2,
-	TeacherID: 2,
+	TeacherID: 1,
 }
 
 var TestSessionDataStudent = schemas.SessionData{
-	ID:         1,
+	ID:         2,
 	SessionKey: "test_uuid",
 	Expires:    1234,
 }
 
 var TestResultsDataStudent = schemas.TestResults{
-	ID:            1,
+	ID:            2,
 	Score:         100,
 	Min:           0,
 	Max:           12,
@@ -34,9 +34,9 @@ var TestAllUserDataStudent = schemas.AllUserData{
 	FirstName:  "Jackson",
 	LastName:   "Furr",
 	Period:     2,
-	TeacherID:  2,
+	TeacherID:  1,
 	Role:       "S",
-	ID:         1,
+	ID:         2,
 	SessionKey: "test_uuid",
 	Expires:    1234,
 }
@@ -52,10 +52,10 @@ var TestRegisterPayloadTeacher = schemas.RegisterPayload{
 	FirstName: "Michelle",
 	LastName:  "Furr",
 	Period:    0,
-	TeacherID: 2,
+	TeacherID: 1,
 }
 
 var TestTeacherInfo = schemas.TeacherData{
-	ID:      2,
+	ID:      1,
 	Periods: 8,
 }
