@@ -58,19 +58,19 @@ CREATE TABLE test_results(
 );
 
 INSERT INTO user_info (first_name, last_name, username, password, role)
-VALUES ('Jackson', 'Furr', 'Poemmys', 'password', 'A');
-
-INSERT INTO user_info (first_name, last_name, username, password, role)
 VALUES ('Michelle', 'Furr', 'MFurr', 'password', 'T');
 
 INSERT INTO teacher_info (user_id, periods)
-VALUES (2, 8);
+VALUES (1, 8);
+
+INSERT INTO user_info (first_name, last_name, username, password, role)
+VALUES ('Jackson', 'Furr', 'Poemmys', 'password', 'A');
 
 INSERT INTO user_info (first_name, last_name, username, password, role)
 VALUES ('Thomas', 'Glenn', 'Tg3', 'password', 'S');
 
 INSERT INTO student_info (user_id, teacher_id, period)
-VALUES (3, 2, 1);
+VALUES (3, 1, 1);
 
 INSERT INTO session_data (user_id, session_key, expires)
 VALUES (3, 'test_uuid', 1234);
