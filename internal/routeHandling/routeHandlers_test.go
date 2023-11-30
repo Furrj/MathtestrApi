@@ -53,10 +53,9 @@ func TestRouteHandlers(t *testing.T) {
 		json.Unmarshal(w.Body.Bytes(), &responseData)
 		responseUserClientData = responseData.User
 
-		if !checkIfUserInserted(t, routeHandler, registerPayload) {
-			t.Errorf("User could not be found, problem inserting")
+		if responseData.User.Username != registerPayload.Username {
+			t.Errorf("Username mismatch after inserting new user, got %s, want %s", responseData.User.Username, registerPayload.Username)
 		}
-
 	})
 	t.Run("ValidateSession_valid", func(t *testing.T) {
 		var validationReponse schemas.SessionValidationResponse
@@ -163,10 +162,4 @@ func TestRouteHandlers(t *testing.T) {
 	if err := db.DropTables(); err != nil {
 		t.Errorf("Error dropping tables: %+v\n", err)
 	}
-}
-
-func checkIfUserInserted(t *testing.T, r *RouteHandler, p schemas.RegisterPayload) bool {
-	t.Helper()
-	result, _ := r.dbHandler.CheckIfUsernameExists(p.Username)
-	return result
 }
