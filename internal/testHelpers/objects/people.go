@@ -25,7 +25,7 @@ var TestResultsDataStudent = schemas.TestResults{
 	Min:           0,
 	Max:           12,
 	QuestionCount: 10,
-	Operations:    "multiplication,addition",
+	Operations:    "mul,add",
 }
 
 var TestAllUserDataStudent = schemas.AllUserData{

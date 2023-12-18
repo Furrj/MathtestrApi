@@ -46,7 +46,7 @@ CREATE TABLE student_info(
 );
 
 CREATE TABLE test_results(
-    user_id INTEGER PRIMARY KEY,
+    user_id INTEGER,
     score SMALLINT,
     min INTEGER,
     max INTEGER,

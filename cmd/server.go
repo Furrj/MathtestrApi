@@ -34,6 +34,7 @@ func main() {
 	router.POST("/api/register", routeHandler.Register)
 	router.POST("/api/validateSession", routeHandler.ValidateSession)
 	router.POST("/api/login", routeHandler.Login)
+	router.POST("/api/testResult", routeHandler.SubmitTestResults)
 	router.Use(spa.Middleware("/", "client"))
 	log.Panic(router.Run(":5000"))
 }

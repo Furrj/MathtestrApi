@@ -134,7 +134,7 @@ func (dbHandler *DBHandler) InsertSessionData(s schemas.SessionData) error {
 }
 
 // InsertTestResults takes SessionData object and inserts it into database
-// session_data table, returns error
+// session_data table, returns errors
 func (dbHandler *DBHandler) InsertTestResults(t schemas.TestResults) error {
 	_, err := dbHandler.DB.Exec(context.Background(), EInsertTestResults, t.ID, t.Score, t.Min, t.Max, t.QuestionCount, t.Operations)
 	if err != nil {
