@@ -16,6 +16,7 @@ func (r *RouteHandler) SubmitTestResults(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
+	fmt.Printf("%+v\n", testResultsPayload)
 
 	if err := r.dbHandler.InsertTestResults(testResultsPayload); err != nil {
 		fmt.Printf("Error inserting test results: %+v\n", err)
