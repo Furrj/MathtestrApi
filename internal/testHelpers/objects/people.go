@@ -28,7 +28,16 @@ var TestResultsDataStudent = schemas.TestResults{
 	Operations:    "mul,add",
 }
 
-var TestAllUserDataStudent = schemas.AllUserData{
+var TestBasicUserData = schemas.BasicUserData{
+	ID:        2,
+	Username:  "a",
+	Password:  "a",
+	FirstName: "Jackson",
+	LastName:  "Furr",
+	Role:      "S",
+}
+
+var TestAllUserDataStudent = schemas.AllUserDataStudent{
 	Username:   "a",
 	Password:   "a",
 	FirstName:  "Jackson",

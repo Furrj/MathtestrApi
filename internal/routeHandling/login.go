@@ -45,9 +45,9 @@ func checkLoginInfo(r *RouteHandler, loginPayload schemas.LoginPayload) (schemas
 	}
 
 	// Get user data
-	userData, err := r.dbHandler.GetUserByUsername(loginPayload.Username)
+	userData, err := r.dbHandler.GetBasicUserInfoByUsername(loginPayload.Username)
 	if err != nil {
-		fmt.Printf("Error in GetUserByUsername: %+v\n", err)
+		fmt.Printf("Error in GetBasicUserInfoByUsername: %+v\n", err)
 		return loginResponse, err
 	}
 

@@ -67,7 +67,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	}
 
 	//Get all new user data
-	userData, err := r.dbHandler.GetUserByUsername(registerPayload.Username)
+	userData, err := r.dbHandler.GetBasicUserInfoByUsername(registerPayload.Username)
 	if err != nil {
 		fmt.Printf("Error retrieving new user information: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")

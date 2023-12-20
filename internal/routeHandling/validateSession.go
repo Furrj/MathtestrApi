@@ -34,7 +34,7 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		return
 	}
 
-	userData, err := r.dbHandler.GetUserByUsername(sessionData.Username)
+	userData, err := r.dbHandler.GetBasicUserInfoByUsername(sessionData.Username)
 	if err != nil {
 		fmt.Printf("Error searching for user data: %+v\n", err)
 		return
