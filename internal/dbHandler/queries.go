@@ -25,7 +25,7 @@ const QGetStudentByUsername = `
 
 // QGetTeacherByUsername takes in username and returns AllUserDataTeacher
 const QGetTeacherByUsername = `
-	Select user_id, username, password, first_name, last_name, role, session_key, expires
+	Select user_id, username, password, first_name, last_name, role, periods, session_key, expires
 	FROM user_info
 	NATURAL JOIN session_data
 	NATURAL JOIN teacher_info

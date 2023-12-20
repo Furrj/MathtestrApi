@@ -57,8 +57,8 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 	return id, nil
 }
 
-// GetBasicUserInfoByUsername takes in username string and searches database
-// for it. Binds query to AllUserDataStudent schema, then returns it and error
+// GetBasicUserInfoByUsername takes in username string and searches database,
+// binds query to BasicUserData schema, then returns result and error
 func (dbHandler *DBHandler) GetBasicUserInfoByUsername(username string) (schemas.BasicUserData, error) {
 	var user schemas.BasicUserData
 	err := dbHandler.DB.QueryRow(context.Background(), QGetBasicUserDataByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role)
@@ -68,6 +68,8 @@ func (dbHandler *DBHandler) GetBasicUserInfoByUsername(username string) (schemas
 	return user, nil
 }
 
+// GetAllStudentDataByUsername takes in username string and searches database,
+// binds query to AllUserDataStudent schema, then returns result and error
 func (dbHandler *DBHandler) GetAllStudentDataByUsername(username string) (schemas.AllUserDataStudent, error) {
 	var user schemas.AllUserDataStudent
 	if err := dbHandler.DB.QueryRow(context.Background(), QGetStudentByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.TeacherID, &user.SessionKey, &user.Expires); err != nil {
@@ -76,7 +78,17 @@ func (dbHandler *DBHandler) GetAllStudentDataByUsername(username string) (schema
 	return user, nil
 }
 
-// GetSessionDataByUserID takes in username string and searches returns
+// GetAllTeacherDataByUsername takes in username string and searches database,
+// binds query to AllUserDataTeacher schema, then returns result and error
+func (dbHandler *DBHandler) GetAllTeacherDataByUsername(username string) (schemas.AllUserDataTeacher, error) {
+	var user schemas.AllUserDataTeacher
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetTeacherByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Periods, &user.SessionKey, &user.Expires); err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetSessionDataByUserID takes in username string, searches then returns
 // session data and error
 func (dbHandler *DBHandler) GetSessionDataByUserID(id int) (schemas.SessionData, error) {
 	var sessionData schemas.SessionData

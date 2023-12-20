@@ -19,6 +19,12 @@ var TestSessionDataStudent = schemas.SessionData{
 	Expires:    1234,
 }
 
+var TestSessionDataTeacher = schemas.SessionData{
+	ID:         1,
+	SessionKey: "test_uuid",
+	Expires:    1234,
+}
+
 var TestResultsDataStudent = schemas.TestResults{
 	ID:            2,
 	Score:         100,
@@ -46,6 +52,18 @@ var TestAllUserDataStudent = schemas.AllUserDataStudent{
 	TeacherID:  1,
 	Role:       "S",
 	ID:         2,
+	SessionKey: "test_uuid",
+	Expires:    1234,
+}
+
+var TestAllUserDataTeacher = schemas.AllUserDataTeacher{
+	ID:         1,
+	Username:   "MFurr",
+	Password:   "password",
+	FirstName:  "Michelle",
+	LastName:   "Furr",
+	Role:       "T",
+	Periods:    8,
 	SessionKey: "test_uuid",
 	Expires:    1234,
 }

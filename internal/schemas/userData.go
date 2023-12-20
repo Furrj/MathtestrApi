@@ -41,6 +41,7 @@ type AllUserDataTeacher struct {
 	ID         uint32 `json:"user_id"`
 	Username   string `json:"username"`
 	Role       string `json:"role"`
+	Periods    uint8  `json:"periods"`
 	Password   string `json:"password"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
