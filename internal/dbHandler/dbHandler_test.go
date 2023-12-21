@@ -17,8 +17,11 @@ func TestDBHandler(t *testing.T) {
 	// Vars
 	testRegisterPayloadStudent := objects.TestRegisterPayloadStudent
 	testSessionDataStudent := objects.TestSessionDataStudent
+	testSessionDataTeacher := objects.TestSessionDataTeacher
 	testResultsDataStudent := objects.TestResultsDataStudent
+	testBasicUserData := objects.TestBasicUserData
 	testAllUserDataStudent := objects.TestAllUserDataStudent
+	testAllUserDataTeacher := objects.TestAllUserDataTeacher
 
 	testRegisterPayloadTeacher := objects.TestRegisterPayloadTeacher
 	testTeacherInfo := objects.TestTeacherInfo
@@ -54,6 +57,11 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("Error inserting teacher info: %+v\n", err)
 		}
 	})
+	t.Run("InsertSessionDataTeacher", func(t *testing.T) {
+		if err := dbHandler.InsertSessionData(testSessionDataTeacher); err != nil {
+			t.Errorf("Error inserting session data for teacher: %+v\n", err)
+		}
+	})
 	t.Run("InsertUserInfoStudent", func(t *testing.T) {
 		if err := dbHandler.InsertUserInfo("S", testRegisterPayloadStudent); err != nil {
 			t.Errorf("Error inserting user: %+v\n", err)
@@ -72,9 +80,9 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("Error inserting student info: %+v\n", err)
 		}
 	})
-	t.Run("InsertSessionData", func(t *testing.T) {
+	t.Run("InsertSessionDataStudent", func(t *testing.T) {
 		if err := dbHandler.InsertSessionData(testSessionDataStudent); err != nil {
-			t.Errorf("Error inserting session data: %+v\n", err)
+			t.Errorf("Error inserting session data for student: %+v\n", err)
 		}
 	})
 	t.Run("InsertTestResults", func(t *testing.T) {
@@ -102,20 +110,34 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("Username doesn't exist but returned true")
 		}
 	})
-	t.Run("GetUserByUsername", func(t *testing.T) {
-		got, err := dbHandler.GetUserByUsername("a")
-		const wantSessionID = "test_uuid"
+	t.Run("GetBasicUserInfoByUsername", func(t *testing.T) {
+		got, err := dbHandler.GetBasicUserInfoByUsername("a")
+		if err != nil {
+			t.Errorf("Error when querying for user: %+v\n", err)
+		}
+		if got != testBasicUserData {
+			t.Errorf("got %+v\n, want %+v\n for BasicUserData", got, testBasicUserData)
+		}
+	})
+	t.Run("GetAllUserDataTeacher", func(t *testing.T) {
+		got, err := dbHandler.GetAllTeacherDataByUsername(testAllUserDataTeacher.Username)
+		if err != nil {
+			t.Errorf("Error when querying for user: %+v\n", err)
+		}
+		if got != testAllUserDataTeacher {
+			t.Errorf("got %+v\n, want %+v\n for AllUserDataTeacher", got, testAllUserDataTeacher)
+		}
+	})
+	t.Run("GetAllUserDataStudent", func(t *testing.T) {
+		got, err := dbHandler.GetAllStudentDataByUsername(testAllUserDataStudent.Username)
 		if err != nil {
 			t.Errorf("Error when querying for user: %+v\n", err)
 		}
 		if got != testAllUserDataStudent {
-			t.Errorf("got %+v\n, want %+v\n for AllUserData", got, testAllUserDataStudent)
-		}
-		if got.SessionKey != wantSessionID {
-			t.Errorf("got %s, want %s for session_key", got.SessionKey, wantSessionID)
+			t.Errorf("got %+v\n, want %+v\n for AllUserDataStudent", got, testAllUserDataStudent)
 		}
 	})
-	t.Run("GetSessionData", func(t *testing.T) {
+	t.Run("GetSessionDataStudent", func(t *testing.T) {
 		got, err := dbHandler.GetSessionDataByUserID(int(testAllUserDataStudent.ID))
 		if err != nil {
 			t.Errorf("Error searching for test result by ID: %+v\n", err)

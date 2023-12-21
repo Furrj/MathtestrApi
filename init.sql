@@ -73,6 +73,12 @@ INSERT INTO student_info (user_id, teacher_id, period)
 VALUES (3, 1, 1);
 
 INSERT INTO session_data (user_id, session_key, expires)
+VALUES (1, 'test_uuid', 1234);
+
+INSERT INTO session_data (user_id, session_key, expires)
+VALUES (2, 'test_uuid', 1234);
+
+INSERT INTO session_data (user_id, session_key, expires)
 VALUES (3, 'test_uuid', 1234);
 
 INSERT INTO test_results(user_id, score, min, max, question_count, operations)

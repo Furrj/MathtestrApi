@@ -7,12 +7,28 @@ const QCheckIfUsernameExists = `
 	SELECT username FROM user_info WHERE username=$1
 `
 
-// QGetUserByUsername takes in username and returns all fields of AllUserData
-const QGetUserByUsername = `
+// QGetBasicUserDataByUsername takes in username and returns BasicUserData
+const QGetBasicUserDataByUsername = `
+	SELECT user_id, username, password, first_name, last_name, role
+	FROM user_info
+	WHERE username=$1
+`
+
+// QGetStudentByUsername takes in username and returns AllUserDataStudent
+const QGetStudentByUsername = `
 	Select user_id, username, password, first_name, last_name, role, period, teacher_id, session_key, expires
 	FROM user_info
 	NATURAL JOIN session_data
 	NATURAL JOIN student_info
+	WHERE username=$1
+`
+
+// QGetTeacherByUsername takes in username and returns AllUserDataTeacher
+const QGetTeacherByUsername = `
+	Select user_id, username, password, first_name, last_name, role, periods, session_key, expires
+	FROM user_info
+	NATURAL JOIN session_data
+	NATURAL JOIN teacher_info
 	WHERE username=$1
 `
 

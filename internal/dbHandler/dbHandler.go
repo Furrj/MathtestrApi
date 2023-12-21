@@ -46,17 +46,6 @@ func (dbHandler *DBHandler) CheckIfUsernameExists(username string) (bool, error)
 	return true, nil
 }
 
-// GetUserByUsername takes in username string and searches database
-// for it. Binds query to AllUserData schema, then returns it and error
-func (dbHandler *DBHandler) GetUserByUsername(username string) (schemas.AllUserData, error) {
-	var user schemas.AllUserData
-	err := dbHandler.DB.QueryRow(context.Background(), QGetUserByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.TeacherID, &user.SessionKey, &user.Expires)
-	if err != nil {
-		return user, err
-	}
-	return user, nil
-}
-
 // GetUserIDByUsername takes in username string and searches database
 // for it. Returns userID (-1 if error) and error
 func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
@@ -68,7 +57,38 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 	return id, nil
 }
 
-// GetSessionDataByUserID takes in username string and searches returns
+// GetBasicUserInfoByUsername takes in username string and searches database,
+// binds query to BasicUserData schema, then returns result and error
+func (dbHandler *DBHandler) GetBasicUserInfoByUsername(username string) (schemas.BasicUserData, error) {
+	var user schemas.BasicUserData
+	err := dbHandler.DB.QueryRow(context.Background(), QGetBasicUserDataByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetAllStudentDataByUsername takes in username string and searches database,
+// binds query to AllUserDataStudent schema, then returns result and error
+func (dbHandler *DBHandler) GetAllStudentDataByUsername(username string) (schemas.AllUserDataStudent, error) {
+	var user schemas.AllUserDataStudent
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetStudentByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Period, &user.TeacherID, &user.SessionKey, &user.Expires); err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetAllTeacherDataByUsername takes in username string and searches database,
+// binds query to AllUserDataTeacher schema, then returns result and error
+func (dbHandler *DBHandler) GetAllTeacherDataByUsername(username string) (schemas.AllUserDataTeacher, error) {
+	var user schemas.AllUserDataTeacher
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetTeacherByUsername, username).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role, &user.Periods, &user.SessionKey, &user.Expires); err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetSessionDataByUserID takes in username string, searches then returns
 // session data and error
 func (dbHandler *DBHandler) GetSessionDataByUserID(id int) (schemas.SessionData, error) {
 	var sessionData schemas.SessionData

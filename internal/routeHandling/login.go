@@ -17,7 +17,7 @@ func (r *RouteHandler) Login(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
-	fmt.Printf("%+v\n", loginPayload)
+	fmt.Printf("Login Payload: %+v\n", loginPayload)
 
 	// Check info and get loginResponse
 	loginResponse, err := checkLoginInfo(r, loginPayload)
@@ -45,9 +45,15 @@ func checkLoginInfo(r *RouteHandler, loginPayload schemas.LoginPayload) (schemas
 	}
 
 	// Get user data
-	userData, err := r.dbHandler.GetUserByUsername(loginPayload.Username)
+	userData, err := r.dbHandler.GetBasicUserInfoByUsername(loginPayload.Username)
 	if err != nil {
-		fmt.Printf("Error in GetUserByUsername: %+v\n", err)
+		fmt.Printf("Error in GetBasicUserInfoByUsername: %+v\n", err)
+		return loginResponse, err
+	}
+
+	userClientData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
+	if err != nil {
+		fmt.Printf("Error in GetSessionDataByUserID: %+v\n", err)
 		return loginResponse, err
 	}
 
@@ -55,7 +61,10 @@ func checkLoginInfo(r *RouteHandler, loginPayload schemas.LoginPayload) (schemas
 		loginResponse.Valid = true
 		loginResponse.User.ID = userData.ID
 		loginResponse.User.Username = userData.Username
-		loginResponse.User.SessionKey = userData.SessionKey
+		loginResponse.User.FirstName = userData.FirstName
+		loginResponse.User.LastName = userData.LastName
+		loginResponse.User.Role = userData.Role
+		loginResponse.User.SessionKey = userClientData.SessionKey
 	}
 
 	return loginResponse, nil

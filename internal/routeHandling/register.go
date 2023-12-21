@@ -67,9 +67,16 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 	}
 
 	//Get all new user data
-	userData, err := r.dbHandler.GetUserByUsername(registerPayload.Username)
+	userData, err := r.dbHandler.GetBasicUserInfoByUsername(registerPayload.Username)
 	if err != nil {
 		fmt.Printf("Error retrieving new user information: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
+		return
+	}
+
+	userStudentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
+	if err != nil {
+		fmt.Printf("Error retrieving student information: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
 		return
 	}
@@ -79,9 +86,9 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ID:         userData.ID,
 		Username:   userData.Username,
 		Role:       userData.Role,
-		Period:     userData.Period,
-		TeacherID:  userData.TeacherID,
-		SessionKey: userData.SessionKey,
+		Period:     userStudentData.Period,
+		TeacherID:  userStudentData.TeacherID,
+		SessionKey: userStudentData.SessionKey,
 	}
 	registerResponse.Valid = true
 	registerResponse.User = userClientData
