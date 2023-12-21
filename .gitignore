@@ -6,3 +6,4 @@ config.env
 logs/
 *.sh
 *.txt
+/client
