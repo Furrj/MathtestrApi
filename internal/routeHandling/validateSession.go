@@ -37,16 +37,16 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 	userData, err := r.dbHandler.GetBasicUserInfoByUsername(sessionData.Username)
 	if err != nil {
 		fmt.Printf("Error searching for user data: %+v\n", err)
-		return
-	}
-	userStudentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
-	if err != nil {
-		fmt.Printf("Error retrieving student information: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
-		return
+		ctx.String(http.StatusNotFound, "Error")
 	}
 
-	if userStudentData.SessionKey != sessionData.SessionKey {
+	userSessionData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
+	if err != nil {
+		fmt.Printf("Error getting user session data: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error")
+	}
+
+	if userSessionData.SessionKey != sessionData.SessionKey {
 		ctx.JSON(http.StatusOK, validationResponse)
 		return
 	}
