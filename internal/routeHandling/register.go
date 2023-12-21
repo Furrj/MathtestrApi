@@ -74,14 +74,21 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		return
 	}
 
+	userStudentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
+	if err != nil {
+		fmt.Printf("Error retrieving student information: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
+		return
+	}
+
 	// Generate and send response
 	userClientData := schemas.UserClientData{
 		ID:         userData.ID,
 		Username:   userData.Username,
 		Role:       userData.Role,
-		Period:     userData.Period,
-		TeacherID:  userData.TeacherID,
-		SessionKey: userData.SessionKey,
+		Period:     userStudentData.Period,
+		TeacherID:  userStudentData.TeacherID,
+		SessionKey: userStudentData.SessionKey,
 	}
 	registerResponse.Valid = true
 	registerResponse.User = userClientData
