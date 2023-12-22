@@ -10,6 +10,9 @@ type RegisterPayload struct {
 }
 
 type RegisterResponse struct {
-	Valid bool           `json:"valid"`
-	User  UserClientData `json:"user"`
+	Valid       bool          `json:"valid"`
+	UserData    BasicUserData `json:"user_data,omitempty"`
+	StudentData StudentData   `json:"student_data,omitempty"`
+	TeacherData TeacherData   `json:"teacher_data,omitempty"`
+	SessionKey  string        `json:"session_key"`
 }
