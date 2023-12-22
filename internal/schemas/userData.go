@@ -57,7 +57,6 @@ type TeacherData struct {
 }
 
 type StudentData struct {
-	ID        uint32 `json:"user_id"`
 	TeacherId uint32 `json:"teacher_id"`
 	Period    uint8  `json:"period"`
 }

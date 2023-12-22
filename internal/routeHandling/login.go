@@ -10,6 +10,9 @@ import (
 
 func (r *RouteHandler) Login(ctx *gin.Context) {
 	var loginPayload schemas.LoginPayload
+	var loginResponse = schemas.LoginResponse{
+		Valid: false,
+	}
 
 	// Bind loginPayload
 	if err := ctx.BindJSON(&loginPayload); err != nil {
@@ -19,53 +22,59 @@ func (r *RouteHandler) Login(ctx *gin.Context) {
 	}
 	fmt.Printf("Login Payload: %+v\n", loginPayload)
 
-	// Check info and get loginResponse
-	loginResponse, err := checkLoginInfo(r, loginPayload)
-	if err != nil {
-		fmt.Printf("Error in checkLoginInfo: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error")
-		return
-	}
-	ctx.JSON(http.StatusOK, loginResponse)
-}
-
-func checkLoginInfo(r *RouteHandler, loginPayload schemas.LoginPayload) (schemas.LoginResponse, error) {
-	loginResponse := schemas.LoginResponse{
-		Valid: false,
-	}
-
 	// Check if username exists
 	exists, err := r.dbHandler.CheckIfUsernameExists(loginPayload.Username)
 	if err != nil {
 		fmt.Printf("Error in CheckIfUsernameExists: %+v\n", err)
-		return loginResponse, err
+		ctx.JSON(http.StatusNotFound, loginResponse)
+		return
 	}
 	if !exists {
-		return loginResponse, nil
+		fmt.Printf("Username '%s' does not exist", loginPayload.Username)
+		ctx.JSON(http.StatusOK, loginResponse)
+		return
 	}
 
-	// Get user data
+	// Get basic user data
 	userData, err := r.dbHandler.GetBasicUserInfoByUsername(loginPayload.Username)
 	if err != nil {
 		fmt.Printf("Error in GetBasicUserInfoByUsername: %+v\n", err)
-		return loginResponse, err
+		ctx.JSON(http.StatusNotFound, loginResponse)
+		return
 	}
+	loginResponse.UserData = userData
 
-	userClientData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
+	// Get session data
+	sessionData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
 	if err != nil {
-		fmt.Printf("Error in GetSessionDataByUserID: %+v\n", err)
-		return loginResponse, err
+		fmt.Printf("Error retrieving session info: %+v\n", err)
+		ctx.JSON(http.StatusNotFound, loginResponse)
+		return
 	}
+	loginResponse.SessionKey = sessionData.SessionKey
 
-	if userData.Username == loginPayload.Username && userData.Password == loginPayload.Password {
+	// Get role-related data
+	switch userData.Role {
+	case "S":
+		studentData, err := r.dbHandler.GetAllStudentDataByUsername(loginPayload.Username)
+		if err != nil {
+			fmt.Printf("Error retrieving student data: %+v\n", err)
+			ctx.JSON(http.StatusOK, loginResponse)
+			return
+		}
+		loginResponse.StudentData.Period = studentData.Period
+		loginResponse.StudentData.TeacherId = studentData.TeacherID
 		loginResponse.Valid = true
-		loginResponse.User.ID = userData.ID
-		loginResponse.User.Username = userData.Username
-		loginResponse.User.FirstName = userData.FirstName
-		loginResponse.User.LastName = userData.LastName
-		loginResponse.User.Role = userData.Role
-		loginResponse.User.SessionKey = userClientData.SessionKey
+	case "T":
+		teacherData, err := r.dbHandler.GetAllTeacherDataByUsername(loginPayload.Username)
+		if err != nil {
+			fmt.Printf("Error retrieving teacher data: %+v\n", err)
+			ctx.JSON(http.StatusOK, loginResponse)
+			return
+		}
+		loginResponse.TeacherData.Periods = teacherData.Periods
+		loginResponse.Valid = true
 	}
 
-	return loginResponse, nil
+	ctx.JSON(http.StatusOK, loginResponse)
 }
