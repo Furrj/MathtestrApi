@@ -57,6 +57,17 @@ func (dbHandler *DBHandler) GetUserIDByUsername(username string) (int, error) {
 	return id, nil
 }
 
+// GetBasicUserInfoByID takes in user_id uint32 and searches database,
+// binds query to BasicUserData schema, then returns result and error
+func (dbHandler *DBHandler) GetBasicUserInfoByID(UserID uint32) (schemas.BasicUserData, error) {
+	var user schemas.BasicUserData
+	err := dbHandler.DB.QueryRow(context.Background(), QGetBasicUserDataByID, UserID).Scan(&user.ID, &user.Username, &user.Password, &user.FirstName, &user.LastName, &user.Role)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 // GetBasicUserInfoByUsername takes in username string and searches database,
 // binds query to BasicUserData schema, then returns result and error
 func (dbHandler *DBHandler) GetBasicUserInfoByUsername(username string) (schemas.BasicUserData, error) {

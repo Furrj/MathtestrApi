@@ -110,6 +110,15 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("Username doesn't exist but returned true")
 		}
 	})
+	t.Run("GetBasicUserInfoByID", func(t *testing.T) {
+		got, err := dbHandler.GetBasicUserInfoByID(testSessionDataStudent.ID)
+		if err != nil {
+			t.Errorf("Error when querying for user: %+v\n", err)
+		}
+		if got != testBasicUserData {
+			t.Errorf("got %+v\n, want %+v\n for BasicUserData", got, testBasicUserData)
+		}
+	})
 	t.Run("GetBasicUserInfoByUsername", func(t *testing.T) {
 		got, err := dbHandler.GetBasicUserInfoByUsername("a")
 		if err != nil {
