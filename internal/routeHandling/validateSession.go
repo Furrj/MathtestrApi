@@ -20,28 +20,9 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
-	fmt.Printf("%+v\n", sessionData)
+	fmt.Printf("%+v\n", validationPayload)
 
-	exists, err := r.dbHandler.CheckIfUsernameExists(sessionData.Username)
-	if err != nil {
-		fmt.Printf("Error searching for name: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error")
-		return
-	}
-	if !exists {
-		fmt.Printf("Username '%s' could not be found", sessionData.Username)
-		ctx.JSON(http.StatusOK, validationResponse)
-		return
-	}
-
-	userData, err := r.dbHandler.GetBasicUserInfoByUsername(sessionData.Username)
-	if err != nil {
-		fmt.Printf("Error searching for user data: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error")
-	}
-	validationResponse.UserData = userData
-
-	userSessionData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
+	userSessionData, err := r.dbHandler.GetSessionDataByUserID(int(validationPayload.ID))
 	if err != nil {
 		fmt.Printf("Error getting user session data: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error")
@@ -51,6 +32,14 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, validationResponse)
 		return
 	}
+
+	// Get basic user info
+	userData, err := r.dbHandler.GetBasicUserInfoByID(validationPayload.ID)
+	if err != nil {
+		fmt.Printf("Error searching for user data: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error")
+	}
+	validationResponse.UserData = userData
 
 	// Get role-related data
 	switch userData.Role {
@@ -70,7 +59,7 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 			ctx.JSON(http.StatusOK, validationResponse)
 			return
 		}
-		loginResponse.TeacherData.Periods = teacherData.Periods
+		validationResponse.TeacherData.Periods = teacherData.Periods
 	}
 
 	validationResponse.Valid = true
