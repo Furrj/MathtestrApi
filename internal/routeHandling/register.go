@@ -31,6 +31,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		return
 	}
 	if exists {
+		fmt.Printf("Username '%s' already exists", registerPayload.Username)
 		ctx.JSON(http.StatusOK, registerResponse)
 		return
 	}
@@ -65,6 +66,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error generating and inserting session data")
 		return
 	}
+	registerResponse.SessionKey = sessionData.SessionKey
 
 	//Get all new user data
 	userData, err := r.dbHandler.GetBasicUserInfoByUsername(registerPayload.Username)
@@ -73,6 +75,7 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
 		return
 	}
+	registerResponse.UserData = userData
 
 	userStudentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
 	if err != nil {
@@ -80,18 +83,9 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
 		return
 	}
-
-	// Generate and send response
-	userClientData := schemas.UserClientData{
-		ID:         userData.ID,
-		Username:   userData.Username,
-		Role:       userData.Role,
-		Period:     userStudentData.Period,
-		TeacherID:  userStudentData.TeacherID,
-		SessionKey: userStudentData.SessionKey,
-	}
+	registerResponse.StudentData.TeacherId = userStudentData.TeacherID
+	registerResponse.StudentData.Period = userStudentData.Period
 	registerResponse.Valid = true
-	registerResponse.User = userClientData
 
 	ctx.JSON(http.StatusOK, registerResponse)
 
