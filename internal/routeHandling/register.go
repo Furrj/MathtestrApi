@@ -75,7 +75,11 @@ func (r *RouteHandler) Register(ctx *gin.Context) {
 		ctx.String(http.StatusNotFound, "Error retrieving new user data afer insertion")
 		return
 	}
-	registerResponse.UserData = userData
+	registerResponse.UserData.ID = userData.ID
+	registerResponse.UserData.Username = userData.Username
+	registerResponse.UserData.FirstName = userData.FirstName
+	registerResponse.UserData.LastName = userData.LastName
+	registerResponse.UserData.Role = userData.Role
 
 	userStudentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
 	if err != nil {

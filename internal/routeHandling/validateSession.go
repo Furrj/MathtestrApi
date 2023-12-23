@@ -39,7 +39,11 @@ func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
 		fmt.Printf("Error searching for user data: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error")
 	}
-	validationResponse.UserData = userData
+	validationResponse.UserData.ID = userData.ID
+	validationResponse.UserData.Username = userData.Username
+	validationResponse.UserData.FirstName = userData.FirstName
+	validationResponse.UserData.LastName = userData.LastName
+	validationResponse.UserData.Role = userData.Role
 
 	// Get role-related data
 	switch userData.Role {
