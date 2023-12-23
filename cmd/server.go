@@ -16,7 +16,10 @@ import (
 func main() {
 	// ENV CONFIG
 	if os.Getenv("MODE") != "PROD" {
-		godotenv.Load("config.env")
+		if err := godotenv.Load("config.env"); err != nil {
+			fmt.Printf("%+v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	// Test backup

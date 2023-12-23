@@ -53,7 +53,7 @@ const QGetSessionDataByUserID = `
 	WHERE user_id=$1
 `
 
-// QGetTestResultsByUsername takes in user_id and returns all test results
+// QGetTestResultsByUserID takes in user_id and returns all test results
 const QGetTestResultsByUserID = `
 	SELECT user_id, score, min, max, question_count, operations, timestamp
 	FROM test_results

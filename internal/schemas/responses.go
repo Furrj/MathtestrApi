@@ -16,3 +16,11 @@ type StudentDataResponse struct {
 type TeacherDataResponse struct {
 	Periods uint8 `json:"periods"`
 }
+type TestResultsResponse struct {
+	Score         uint8  `json:"score"`
+	Min           int32  `json:"min"`
+	Max           int32  `json:"max"`
+	QuestionCount uint32 `json:"question_count"`
+	Operations    string `json:"operations"`
+	Timestamp     uint64 `json:"timestamp"`
+}
