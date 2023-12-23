@@ -9,47 +9,59 @@ import (
 )
 
 func (r *RouteHandler) ValidateSession(ctx *gin.Context) {
-	var sessionData schemas.UserClientData
-	validationResponse := schemas.SessionValidationResponse{
+	var validationPayload schemas.ValidationPayload
+	validationResponse := schemas.ValidationResponse{
 		Valid: false,
 	}
 
 	// Bind request body
-	if err := ctx.BindJSON(&sessionData); err != nil {
-		fmt.Printf("Error binding json: %+v\n", err)
+	if err := ctx.BindJSON(&validationPayload); err != nil {
+		fmt.Printf("Error binding validationPayload json: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error")
 		return
 	}
-	fmt.Printf("%+v\n", sessionData)
+	fmt.Printf("%+v\n", validationPayload)
 
-	exists, err := r.dbHandler.CheckIfUsernameExists(sessionData.Username)
-	if err != nil {
-		fmt.Printf("Error searching for name: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error")
-		return
-	}
-	if !exists {
-		fmt.Printf("%q could not be found in database", sessionData.Username)
-		ctx.JSON(http.StatusOK, validationResponse)
-		return
-	}
-
-	userData, err := r.dbHandler.GetBasicUserInfoByUsername(sessionData.Username)
-	if err != nil {
-		fmt.Printf("Error searching for user data: %+v\n", err)
-		ctx.String(http.StatusNotFound, "Error")
-	}
-
-	userSessionData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))
+	userSessionData, err := r.dbHandler.GetSessionDataByUserID(int(validationPayload.ID))
 	if err != nil {
 		fmt.Printf("Error getting user session data: %+v\n", err)
 		ctx.String(http.StatusNotFound, "Error")
 	}
 
-	if userSessionData.SessionKey != sessionData.SessionKey {
+	if userSessionData.SessionKey != validationPayload.SessionKey {
 		ctx.JSON(http.StatusOK, validationResponse)
 		return
 	}
+
+	// Get basic user info
+	userData, err := r.dbHandler.GetBasicUserInfoByID(validationPayload.ID)
+	if err != nil {
+		fmt.Printf("Error searching for user data: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error")
+	}
+	validationResponse.UserData = userData
+
+	// Get role-related data
+	switch userData.Role {
+	case "S":
+		studentData, err := r.dbHandler.GetAllStudentDataByUsername(userData.Username)
+		if err != nil {
+			fmt.Printf("Error retrieving student data: %+v\n", err)
+			ctx.JSON(http.StatusOK, validationResponse)
+			return
+		}
+		validationResponse.StudentData.Period = studentData.Period
+		validationResponse.StudentData.TeacherId = studentData.TeacherID
+	case "T":
+		teacherData, err := r.dbHandler.GetAllTeacherDataByUsername(userData.Username)
+		if err != nil {
+			fmt.Printf("Error retrieving teacher data: %+v\n", err)
+			ctx.JSON(http.StatusOK, validationResponse)
+			return
+		}
+		validationResponse.TeacherData.Periods = teacherData.Periods
+	}
+
 	validationResponse.Valid = true
 	ctx.JSON(http.StatusOK, validationResponse)
 }

@@ -7,6 +7,13 @@ const QCheckIfUsernameExists = `
 	SELECT username FROM user_info WHERE username=$1
 `
 
+// QGetBasicUserDataByID takes in user_id and searches for user, returns BasicUserData
+const QGetBasicUserDataByID = `
+	SELECT user_id, username, password, first_name, last_name, role
+	FROM user_info
+	WHERE user_id=$1
+`
+
 // QGetBasicUserDataByUsername takes in username and returns BasicUserData
 const QGetBasicUserDataByUsername = `
 	SELECT user_id, username, password, first_name, last_name, role
