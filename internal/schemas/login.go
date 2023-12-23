@@ -6,9 +6,9 @@ type LoginPayload struct {
 }
 
 type LoginResponse struct {
-	Valid       bool          `json:"valid"`
-	UserData    BasicUserData `json:"user_data,omitempty"`
-	StudentData StudentData   `json:"student_data,omitempty"`
-	TeacherData TeacherData   `json:"teacher_data,omitempty"`
-	SessionKey  string        `json:"session_key"`
+	Valid       bool                  `json:"valid"`
+	UserData    BasicUserDataResponse `json:"user_data,omitempty"`
+	StudentData StudentDataResponse   `json:"student_data,omitempty"`
+	TeacherData TeacherDataResponse   `json:"teacher_data,omitempty"`
+	SessionKey  string                `json:"session_key"`
 }

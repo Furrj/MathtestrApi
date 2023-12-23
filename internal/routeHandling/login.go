@@ -42,7 +42,11 @@ func (r *RouteHandler) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, loginResponse)
 		return
 	}
-	loginResponse.UserData = userData
+	loginResponse.UserData.ID = userData.ID
+	loginResponse.UserData.Username = userData.Username
+	loginResponse.UserData.FirstName = userData.FirstName
+	loginResponse.UserData.LastName = userData.LastName
+	loginResponse.UserData.Role = userData.Role
 
 	// Get session data
 	sessionData, err := r.dbHandler.GetSessionDataByUserID(int(userData.ID))

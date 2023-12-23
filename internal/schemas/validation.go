@@ -5,8 +5,8 @@ type ValidationPayload struct {
 	SessionKey string `json:"session_key"`
 }
 type ValidationResponse struct {
-	Valid       bool          `json:"valid"`
-	UserData    BasicUserData `json:"user_data,omitempty"`
-	StudentData StudentData   `json:"student_data,omitempty"`
-	TeacherData TeacherData   `json:"teacher_data,omitempty"`
+	Valid       bool                  `json:"valid"`
+	UserData    BasicUserDataResponse `json:"user_data,omitempty"`
+	StudentData StudentDataResponse   `json:"student_data,omitempty"`
+	TeacherData TeacherDataResponse   `json:"teacher_data,omitempty"`
 }
