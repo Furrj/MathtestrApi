@@ -27,7 +27,7 @@ func TestDBHandler(t *testing.T) {
 	testTeacherInfo := objects.TestTeacherInfo
 
 	dbHandler := InitDBHandler(os.Getenv("DB_URL_TEST"))
-	defer dbHandler.DB.Close(context.Background())
+	defer dbHandler.DB.Close()
 
 	t.Run("Ping connection", func(t *testing.T) {
 		if err := dbHandler.DB.Ping(context.Background()); err != nil {

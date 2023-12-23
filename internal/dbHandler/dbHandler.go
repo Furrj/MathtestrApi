@@ -5,25 +5,26 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"mathtestr.com/server/internal/testHelpers/objects"
 	"os"
 	"strconv"
 
-	"github.com/jackc/pgx/v5"
 	"mathtestr.com/server/internal/schemas"
 )
 
 // DBHandler object contains a pointer to pgx connection, one per server
 type DBHandler struct {
-	DB *pgx.Conn
+	DB *pgxpool.Pool
 }
 
 // InitDBHandler is constructor for DBHandler, takes a database connection
 // string and returns a pointer to instantiated DBHandler.
 func InitDBHandler(connectionString string) *DBHandler {
 	var newDBHandler DBHandler
-	db, err := pgx.Connect(context.Background(), connectionString)
+	db, err := pgxpool.New(context.Background(), connectionString)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		os.Exit(1)
