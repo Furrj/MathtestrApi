@@ -119,10 +119,8 @@ func (dbHandler *DBHandler) GetSessionDataByUserID(id int) (schemas.SessionData,
 func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults, error) {
 	var results schemas.TestResults
 
-	if err := dbHandler.DB.QueryRow(context.Background(), QGetTestResultsByUserID, id).Scan(&results.ID, &results.Score, &results.Min, &results.Max, &results.QuestionCount, &results.Operations); err != nil {
+	if err := dbHandler.DB.QueryRow(context.Background(), QGetTestResultsByUserID, id).Scan(&results.ID, &results.Score, &results.Min, &results.Max, &results.QuestionCount, &results.Operations, &results.Timestamp); err != nil {
 		return results, err
-	} else if id != int(results.ID) {
-		return results, errors.New("id mismatch when searching for test result by id")
 	}
 
 	return results, nil
@@ -167,7 +165,7 @@ func (dbHandler *DBHandler) InsertSessionData(s schemas.SessionData) error {
 // InsertTestResults takes SessionData object and inserts it into database
 // session_data table, returns errors
 func (dbHandler *DBHandler) InsertTestResults(t schemas.TestResults) error {
-	_, err := dbHandler.DB.Exec(context.Background(), EInsertTestResults, t.ID, t.Score, t.Min, t.Max, t.QuestionCount, t.Operations)
+	_, err := dbHandler.DB.Exec(context.Background(), EInsertTestResults, t.ID, t.Score, t.Min, t.Max, t.QuestionCount, t.Operations, t.Timestamp)
 	if err != nil {
 		log.Printf("Error inserting test results: %+v\n", err)
 		return err

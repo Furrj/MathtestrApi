@@ -32,6 +32,7 @@ var TestResultsDataStudent = schemas.TestResults{
 	Max:           12,
 	QuestionCount: 10,
 	Operations:    "mul,add",
+	Timestamp:     123,
 }
 
 var TestBasicUserData = schemas.BasicUserData{

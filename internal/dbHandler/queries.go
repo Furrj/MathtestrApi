@@ -55,7 +55,7 @@ const QGetSessionDataByUserID = `
 
 // QGetTestResultsByUsername takes in user_id and returns all test results
 const QGetTestResultsByUserID = `
-	SELECT user_id, score, min, max, question_count, operations
+	SELECT user_id, score, min, max, question_count, operations, timestamp
 	FROM test_results
 	WHERE user_id=$1
 `
@@ -86,8 +86,8 @@ const EInsertSessionData = `
 
 // EInsertTestResults inserts all fields of TestResults into test_results table
 const EInsertTestResults = `
-    INSERT INTO test_results (user_id, score, min, max, question_count, operations)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO test_results (user_id, score, min, max, question_count, operations, timestamp)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
 // TESTING
@@ -154,6 +154,7 @@ const EInitTestResults = `
 		max INTEGER,
 		question_count SMALLINT,
 		operations VARCHAR(50),
+		timestamp BIGINT,
 		CONSTRAINT fk_user_id
 			FOREIGN KEY (user_id)
 				REFERENCES user_info(user_id)

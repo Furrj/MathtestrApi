@@ -158,7 +158,7 @@ func TestDBHandler(t *testing.T) {
 	t.Run("GetTestResults", func(t *testing.T) {
 		got, err := dbHandler.GetTestResultsByUserID(int(testAllUserDataStudent.ID))
 		if err != nil {
-			t.Errorf("Error searching for test result by ID: %+v\n", err)
+			t.Errorf("Error searching for test result: %+v\n", err)
 		}
 		if got != testResultsDataStudent {
 			t.Errorf("got %+v\n, want %+v\n for TestResults", got, testResultsDataStudent)

@@ -52,6 +52,7 @@ CREATE TABLE test_results(
     max INTEGER,
     question_count SMALLINT,
     operations VARCHAR(50),
+    timestamp BIGINT,
     CONSTRAINT fk_user_id
         FOREIGN KEY (user_id)
             REFERENCES user_info(user_id)
@@ -81,5 +82,5 @@ VALUES (2, 'test_uuid', 1234);
 INSERT INTO session_data (user_id, session_key, expires)
 VALUES (3, 'test_uuid', 1234);
 
-INSERT INTO test_results(user_id, score, min, max, question_count, operations)
-VALUES (3, 100, 1, 12, 5, 'Multiplication');
+INSERT INTO test_results(user_id, score, min, max, question_count, operations, timestamp)
+VALUES (3, 100, 1, 12, 5, 'Multiplication', 123);
