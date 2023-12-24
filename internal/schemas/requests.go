@@ -21,5 +21,5 @@ type ValidationPayload struct {
 
 type ProfilePagePayload struct {
 	ID        uint32 `json:"user_id"`
-	TeacherID uint32 `json:"teacher_id,string"`
+	TeacherID uint32 `json:"teacher_id"`
 }
