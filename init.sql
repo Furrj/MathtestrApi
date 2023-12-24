@@ -59,7 +59,7 @@ CREATE TABLE test_results(
 );
 
 INSERT INTO user_info (first_name, last_name, username, password, role)
-VALUES ('Michelle', 'Furr', 'MFurr', 'password', 'T');
+VALUES ('Michele', 'Furr', 'MFurr', 'password', 'T');
 
 INSERT INTO teacher_info (user_id, periods)
 VALUES (1, 8);

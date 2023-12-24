@@ -24,3 +24,31 @@ type TestResultsResponse struct {
 	Operations    string `json:"operations"`
 	Timestamp     uint64 `json:"timestamp"`
 }
+
+type ProfilePageResponse struct {
+	Tests       []TestResultsResponse `json:"tests"`
+	TeacherName string                `json:"teacher_name"`
+}
+
+type LoginResponse struct {
+	Valid       bool                  `json:"valid"`
+	UserData    BasicUserDataResponse `json:"user_data,omitempty"`
+	StudentData StudentDataResponse   `json:"student_data,omitempty"`
+	TeacherData TeacherDataResponse   `json:"teacher_data,omitempty"`
+	SessionKey  string                `json:"session_key"`
+}
+
+type RegisterResponse struct {
+	Valid       bool                  `json:"valid"`
+	UserData    BasicUserDataResponse `json:"user_data,omitempty"`
+	StudentData StudentDataResponse   `json:"student_data,omitempty"`
+	TeacherData TeacherDataResponse   `json:"teacher_data,omitempty"`
+	SessionKey  string                `json:"session_key"`
+}
+
+type ValidationResponse struct {
+	Valid       bool                  `json:"valid"`
+	UserData    BasicUserDataResponse `json:"user_data,omitempty"`
+	StudentData StudentDataResponse   `json:"student_data,omitempty"`
+	TeacherData TeacherDataResponse   `json:"teacher_data,omitempty"`
+}

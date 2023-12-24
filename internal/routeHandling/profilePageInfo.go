@@ -7,9 +7,10 @@ import (
 	"net/http"
 )
 
-func (r *RouteHandler) GetTestResults(ctx *gin.Context) {
-	var requestPayload schemas.ValidationPayload
-	var responsePayload []schemas.TestResultsResponse
+func (r *RouteHandler) ProfilePageInfo(ctx *gin.Context) {
+	var requestPayload schemas.ProfilePagePayload
+	var responsePayload schemas.ProfilePageResponse
+	var tests []schemas.TestResultsResponse
 
 	// Bind request body
 	if err := ctx.BindJSON(&requestPayload); err != nil {
@@ -19,6 +20,16 @@ func (r *RouteHandler) GetTestResults(ctx *gin.Context) {
 	}
 	fmt.Printf("%+v\n", requestPayload)
 
+	// Get teacher name
+	teacherInfo, err := r.dbHandler.GetBasicUserInfoByID(requestPayload.TeacherID)
+	if err != nil {
+		fmt.Printf("Error getting teacher name: %+v\n", err)
+		ctx.String(http.StatusNotFound, "Error")
+		return
+	}
+	responsePayload.TeacherName = fmt.Sprintf("%s %s", teacherInfo.FirstName, teacherInfo.LastName)
+
+	// Get tests
 	testResults, err := r.dbHandler.GetTestResultsByUserID(int(requestPayload.ID))
 	if err != nil {
 		fmt.Printf("Error querying test results: %+v\n", err)
@@ -27,7 +38,7 @@ func (r *RouteHandler) GetTestResults(ctx *gin.Context) {
 	}
 
 	for _, v := range testResults {
-		responsePayload = append(responsePayload, schemas.TestResultsResponse{
+		tests = append(tests, schemas.TestResultsResponse{
 			Score:         v.Score,
 			Min:           v.Min,
 			Max:           v.Max,
@@ -36,6 +47,7 @@ func (r *RouteHandler) GetTestResults(ctx *gin.Context) {
 			Timestamp:     v.Timestamp,
 		})
 	}
+	responsePayload.Tests = tests
 
 	ctx.JSON(http.StatusOK, responsePayload)
 }

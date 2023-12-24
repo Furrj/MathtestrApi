@@ -159,7 +159,7 @@ func TestDBHandler(t *testing.T) {
 			t.Errorf("got %+v\n, want %+v\n for SessionData", got, testSessionDataStudent)
 		}
 	})
-	t.Run("GetTestResults", func(t *testing.T) {
+	t.Run("ProfilePageInfo", func(t *testing.T) {
 		got, err := dbHandler.GetTestResultsByUserID(int(testAllUserDataStudent.ID))
 		if err != nil {
 			t.Errorf("Error searching for test result: %+v\n", err)
