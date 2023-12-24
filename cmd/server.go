@@ -16,7 +16,10 @@ import (
 func main() {
 	// ENV CONFIG
 	if os.Getenv("MODE") != "PROD" {
-		godotenv.Load("config.env")
+		if err := godotenv.Load("config.env"); err != nil {
+			fmt.Printf("%+v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	// Test backup
@@ -44,6 +47,7 @@ func main() {
 	router.POST("/api/validateSession", routeHandler.ValidateSession)
 	router.POST("/api/login", routeHandler.Login)
 	router.POST("/api/testResult", routeHandler.SubmitTestResults)
+	router.POST("/api/testResults", routeHandler.GetTestResults)
 
 	router.Use(spa.Middleware("/", "client"))
 

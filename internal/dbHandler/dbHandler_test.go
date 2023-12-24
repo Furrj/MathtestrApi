@@ -2,6 +2,7 @@ package dbHandler
 
 import (
 	"context"
+	"fmt"
 	"mathtestr.com/server/internal/testHelpers/objects"
 	"os"
 	"testing"
@@ -11,7 +12,10 @@ import (
 
 func TestDBHandler(t *testing.T) {
 	if os.Getenv("MODE") != "PROD" {
-		godotenv.Load("../../config.env")
+		if err := godotenv.Load("../../config.env"); err != nil {
+			fmt.Printf("%+v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	// Vars
@@ -160,7 +164,7 @@ func TestDBHandler(t *testing.T) {
 		if err != nil {
 			t.Errorf("Error searching for test result: %+v\n", err)
 		}
-		if got != testResultsDataStudent {
+		if got[0] != testResultsDataStudent {
 			t.Errorf("got %+v\n, want %+v\n for TestResults", got, testResultsDataStudent)
 		}
 	})

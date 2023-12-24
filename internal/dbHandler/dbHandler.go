@@ -117,11 +117,25 @@ func (dbHandler *DBHandler) GetSessionDataByUserID(id int) (schemas.SessionData,
 // GetTestResultsByUserID takes in username string and searches test_results
 // for all rows under username and error
 // FIXME: Iterate through multiple rows
-func (dbHandler *DBHandler) GetTestResultsByUserID(id int) (schemas.TestResults, error) {
-	var results schemas.TestResults
+func (dbHandler *DBHandler) GetTestResultsByUserID(id int) ([]schemas.TestResults, error) {
+	var results []schemas.TestResults
 
-	if err := dbHandler.DB.QueryRow(context.Background(), QGetTestResultsByUserID, id).Scan(&results.ID, &results.Score, &results.Min, &results.Max, &results.QuestionCount, &results.Operations, &results.Timestamp); err != nil {
+	rows, err := dbHandler.DB.Query(context.Background(), QGetTestResultsByUserID, id)
+	if err != nil {
 		return results, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var result schemas.TestResults
+		if err := rows.Scan(&result.ID, &result.Score, &result.Min, &result.Max, &result.QuestionCount, &result.Operations, &result.Timestamp); err != nil {
+			return results, err
+		}
+		results = append(results, result)
+	}
+
+	if rows.Err() != nil {
+		return results, rows.Err()
 	}
 
 	return results, nil
