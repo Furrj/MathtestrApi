@@ -9,7 +9,6 @@ RUN go mod download
 ADD cmd ./cmd
 ADD internal ./internal
 ADD client ./client
-ADD logs ./logs
 
 ENV MODE=PROD
 ENV DB_URL=postgres://postgres:password@host.docker.internal:5432/mathtestr
@@ -21,3 +20,4 @@ RUN go build -o server cmd/server.go
 EXPOSE 5000
 
 CMD ["./server"]
+
